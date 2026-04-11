@@ -484,6 +484,66 @@ section { padding:80px 0; }
 .img-ph.beauty-4 { background:linear-gradient(135deg,#151a20,#2a3040); }
 .img-ph.gold-grad { background:linear-gradient(135deg,#2c2010,#c9a84c44); }
 
+/* ======== BREADCRUMB & SUBNAV ======== */
+.breadcrumb {
+  background: var(--oxford);
+  border-bottom: 1px solid var(--border);
+  padding: 12px 40px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 9px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+}
+.breadcrumb a {
+  color: var(--text-muted);
+  text-decoration: none;
+  cursor: pointer;
+  transition: color 0.25s;
+}
+.breadcrumb a:hover { color: var(--gold); }
+.breadcrumb-sep { color: var(--border); font-size: 10px; }
+.breadcrumb-current { color: var(--gold); }
+
+.subpage-tabs {
+  background: var(--oxford);
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  justify-content: center;
+  gap: 0;
+}
+.subpage-tab {
+  padding: 14px 36px;
+  font-size: 9px;
+  letter-spacing: 2.5px;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.5);
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  transition: all 0.3s;
+  background: transparent;
+  border-top: none;
+  border-left: none;
+  border-right: none;
+  font-family: 'Josefin Sans', sans-serif;
+}
+.subpage-tab:hover { color: var(--gold); }
+.subpage-tab.active { color: var(--gold); border-bottom-color: var(--gold); }
+
+/* Curso detail improvements */
+.curso-detalle-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 64px; align-items: start; padding-bottom: 80px; }
+.curso-feature { display: flex; align-items: center; gap: 12px; padding: 12px 0; border-bottom: 1px solid var(--border); }
+.curso-feature-icon { width: 36px; height: 36px; border: 1px solid var(--border); display: flex; align-items: center; justify-content: center; color: var(--gold); font-size: 14px; flex-shrink: 0; }
+.curso-feature-label { font-size: 9px; letter-spacing: 2px; text-transform: uppercase; color: var(--text-muted); display: block; margin-bottom: 3px; }
+.curso-feature-val { font-size: 13px; color: var(--white); letter-spacing: 0.5px; }
+
+@media(max-width:768px) {
+  .curso-detalle-grid { grid-template-columns: 1fr; }
+  .breadcrumb { padding: 12px 20px; }
+  .subpage-tab { padding: 12px 16px; font-size: 8px; }
+}
+
 /* ======== RESPONSIVE ======== */
 @media(max-width:1024px) {
   .what-grid { grid-template-columns:repeat(2,1fr); }
@@ -670,12 +730,12 @@ section { padding:80px 0; }
       </a>
 
       <!-- Email -->
-      <a class="strip-item" href="mailto:hola@metabeauty.mx">
+      <a class="strip-item" href="/cdn-cgi/l/email-protection#4a2225262b0a272f3e2b282f2b3f3e33642732">
         <div class="strip-main-icon">
           <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--gold)" stroke-width="1.5"><rect x="2" y="4" width="20" height="16" rx="2"/><polyline points="2,4 12,13 22,4"/></svg>
         </div>
         <div class="strip-title">Email</div>
-        <div class="strip-desc">hola@metabeauty.mx</div>
+        <div class="strip-desc"><span class="__cf_email__" data-cfemail="4d2522212c0d2028392c2f282c383934632035">[email&#160;protected]</span></div>
       </a>
 
       <!-- Dónde trabajamos -->
@@ -998,27 +1058,48 @@ section { padding:80px 0; }
 
   <section class="modalidades-section" id="modalidades">
     <div class="container">
+
+      <!-- SEARCH RESULTS PANEL (hidden by default) -->
+      <div id="academia-search-results" style="display:none;margin-bottom:60px;">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:28px;flex-wrap:wrap;gap:12px;">
+          <div>
+            <span class="about-tag" style="margin-bottom:6px;">Resultados de búsqueda</span>
+            <h2 style="font-family:'Cormorant Garamond',serif;font-size:clamp(22px,3vw,38px);font-weight:300;color:var(--oxford-dark);margin:0;" id="search-results-title">Resultados para "..."</h2>
+          </div>
+          <button onclick="clearAcademiaSearch()" style="padding:10px 24px;border:1px solid var(--border);background:transparent;font-family:'Josefin Sans',sans-serif;font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--text-muted);cursor:pointer;transition:all 0.3s;" onmouseover="this.style.borderColor='var(--gold)';this.style.color='var(--gold)'" onmouseout="this.style.borderColor='var(--border)';this.style.color='var(--text-muted)'">✕ Limpiar búsqueda</button>
+        </div>
+        <div id="academia-results-grid" class="cursos-grid" style="margin-top:0;">
+          <!-- JS will populate this -->
+        </div>
+        <div id="academia-no-results" style="display:none;text-align:center;padding:60px 20px;border:1px solid var(--border);">
+          <div style="font-size:36px;margin-bottom:16px;">🔍</div>
+          <p style="font-family:'Cormorant Garamond',serif;font-size:24px;color:var(--oxford-dark);margin-bottom:8px;">Sin resultados</p>
+          <p style="font-size:11px;color:var(--text-muted);letter-spacing:1px;" id="academia-no-results-text">No encontramos cursos para tu búsqueda.</p>
+        </div>
+        <div style="width:60px;height:1px;background:linear-gradient(90deg,var(--gold),var(--gold-light));margin:48px 0 0;"></div>
+      </div>
+
       <h2>Modalidades</h2>
       <div class="gold-line center"></div>
       <p class="sub">Selecciona la modalidad que más se adecue a tus necesidades</p>
       <div class="modalidades-grid">
-        <div class="modalidad-card" onclick="goPage('academia')">
+        <div class="modalidad-card" onclick="goPage('academia-online')">
           <span class="modalidad-icon">💻</span>
           <h3>Academia Online</h3>
           <p>Aprende desde casa a tu propio ritmo con acceso de por vida a todos los materiales, clases grabadas y comunidad privada.</p>
-          <button class="btn-gold" onclick="event.stopPropagation();goPage('academia')">Ver cursos online</button>
+          <button class="btn-gold" onclick="event.stopPropagation();goPage('academia-online')">Ver cursos online</button>
         </div>
-        <div class="modalidad-card" onclick="goPage('academia')">
+        <div class="modalidad-card" onclick="goPage('academia-presencial')">
           <span class="modalidad-icon">🏫</span>
           <h3>Academia Presencial</h3>
           <p>Talleres intensivos en nuestro estudio en CDMX. Práctica real, material incluido y certificado al finalizar.</p>
-          <button class="btn-gold" onclick="event.stopPropagation();goPage('academia')">Ver presenciales</button>
+          <button class="btn-gold" onclick="event.stopPropagation();goPage('academia-presencial')">Ver presenciales</button>
         </div>
-        <div class="modalidad-card" onclick="goPage('contacto')">
+        <div class="modalidad-card" onclick="goPage('academia-asesorias')">
           <span class="modalidad-icon">🎯</span>
           <h3>Asesorías</h3>
           <p>Sesiones 1:1 con Areli Raya o nuestras instructoras certificadas. Mentoría personalizada para tu crecimiento profesional.</p>
-          <button class="btn-gold" onclick="event.stopPropagation();goPage('contacto')">Agendar asesoría</button>
+          <button class="btn-gold" onclick="event.stopPropagation();goPage('academia-asesorias')">Agendar asesoría</button>
         </div>
       </div>
     </div>
@@ -1043,60 +1124,91 @@ section { padding:80px 0; }
       <h2>Cursos más populares</h2>
       <div class="gold-line"></div>
       <div class="cursos-grid">
-        <div class="curso-card" onclick="goPage('contacto')">
+
+        <div class="curso-card" onclick="goPage('curso-detalle');setCurso('Maquillaje Profesional desde Cero','Online · Maquillaje','$1,499 MXN','8 semanas','Principiante','Aprende las bases del maquillaje profesional: preparación de piel, técnicas de aplicación, corrección, contouring y looks para toda ocasión. Incluye 24 clases grabadas y acceso de por vida.','academia')">
           <div class="curso-card-img"><div class="img-ph beauty-1" style="flex-direction:column;gap:8px;"><div style="font-size:36px;">✨</div><span style="font-size:9px;opacity:0.6;">imagen curso</span></div></div>
           <div class="curso-card-body">
             <span class="curso-tag">Online · Maquillaje</span>
             <h3>Maquillaje Profesional desde Cero</h3>
             <p>Aprende las bases del maquillaje profesional: preparación de piel, técnicas de aplicación y looks para toda ocasión.</p>
-            <div class="curso-price">$1,499 MXN</div>
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-top:12px;">
+              <div class="curso-price">$1,499 MXN</div>
+              <span style="font-size:9px;color:var(--text-muted);letter-spacing:1px;">8 semanas</span>
+            </div>
+            <button class="btn-gold" style="margin-top:16px;font-size:9px;padding:9px 20px;" onclick="event.stopPropagation();goPage('curso-detalle');setCurso('Maquillaje Profesional desde Cero','Online · Maquillaje','$1,499 MXN','8 semanas','Principiante','Aprende las bases del maquillaje profesional: preparación de piel, técnicas de aplicación, corrección, contouring y looks para toda ocasión. Incluye 24 clases grabadas y acceso de por vida.','academia')">Ver más</button>
           </div>
         </div>
-        <div class="curso-card" onclick="goPage('contacto')">
+
+        <div class="curso-card" onclick="goPage('curso-detalle');setCurso('Colorimetría Avanzada','Presencial · Cabello','$4,800 MXN','2 días intensivos','Intermedio','Taller intensivo de 2 días donde dominarás balayage, mechas californianas, iluminación y corrección de color. Material incluido, modelo real en práctica y certificado al finalizar.','academia')">
           <div class="curso-card-img"><div class="img-ph beauty-2" style="flex-direction:column;gap:8px;"><div style="font-size:36px;">💇</div><span style="font-size:9px;opacity:0.6;">imagen curso</span></div></div>
           <div class="curso-card-body">
             <span class="curso-tag">Presencial · Cabello</span>
             <h3>Colorimetría Avanzada</h3>
             <p>Técnicas modernas: balayage, mechas, iluminación y corrección de color con materiales de primera.</p>
-            <div class="curso-price">$4,800 MXN</div>
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-top:12px;">
+              <div class="curso-price">$4,800 MXN</div>
+              <span style="font-size:9px;color:var(--text-muted);letter-spacing:1px;">2 días</span>
+            </div>
+            <button class="btn-gold" style="margin-top:16px;font-size:9px;padding:9px 20px;" onclick="event.stopPropagation();goPage('curso-detalle');setCurso('Colorimetría Avanzada','Presencial · Cabello','$4,800 MXN','2 días intensivos','Intermedio','Taller intensivo de 2 días donde dominarás balayage, mechas californianas, iluminación y corrección de color. Material incluido, modelo real en práctica y certificado al finalizar.','academia')">Ver más</button>
           </div>
         </div>
-        <div class="curso-card" onclick="goPage('contacto')">
+
+        <div class="curso-card" onclick="goPage('curso-detalle');setCurso('Consultoría de Imagen Personal','Online · Imagen','$2,200 MXN','6 semanas','Todos los niveles','Construye una identidad visual poderosa. Aprende colorimetría personal, morfología de rostro, estilos y cómo asesorar a tus propios clientes con confianza y profesionalismo.','academia')">
           <div class="curso-card-img"><div class="img-ph beauty-3" style="flex-direction:column;gap:8px;"><div style="font-size:36px;">🌟</div><span style="font-size:9px;opacity:0.6;">imagen curso</span></div></div>
           <div class="curso-card-body">
             <span class="curso-tag">Online · Imagen</span>
             <h3>Consultoría de Imagen Personal</h3>
             <p>Construye una identidad visual poderosa. Aprende colorimetría personal y cómo asesorar a tus clientes.</p>
-            <div class="curso-price">$2,200 MXN</div>
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-top:12px;">
+              <div class="curso-price">$2,200 MXN</div>
+              <span style="font-size:9px;color:var(--text-muted);letter-spacing:1px;">6 semanas</span>
+            </div>
+            <button class="btn-gold" style="margin-top:16px;font-size:9px;padding:9px 20px;" onclick="event.stopPropagation();goPage('curso-detalle');setCurso('Consultoría de Imagen Personal','Online · Imagen','$2,200 MXN','6 semanas','Todos los niveles','Construye una identidad visual poderosa. Aprende colorimetría personal, morfología de rostro, estilos y cómo asesorar a tus propios clientes con confianza y profesionalismo.','academia')">Ver más</button>
           </div>
         </div>
-        <div class="curso-card" onclick="goPage('contacto')">
+
+        <div class="curso-card" onclick="goPage('curso-detalle');setCurso('Maquillaje Nupcial Profesional','Presencial · Novias','$5,500 MXN','3 días intensivos','Intermedio','Especialización completa en maquillaje para novias: skin prep, airbrush, looks duraderos de larga duración, manejo emocional del día y cómo atender a tu clienta. Material incluido.','academia')">
           <div class="curso-card-img"><div class="img-ph beauty-4" style="flex-direction:column;gap:8px;"><div style="font-size:36px;">👰</div><span style="font-size:9px;opacity:0.6;">imagen curso</span></div></div>
           <div class="curso-card-body">
             <span class="curso-tag">Presencial · Maquillaje</span>
             <h3>Maquillaje Nupcial Profesional</h3>
             <p>Especialízate en el maquillaje para novias: skin prep, airbrush, looks duraderos y manejo emocional.</p>
-            <div class="curso-price">$5,500 MXN</div>
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-top:12px;">
+              <div class="curso-price">$5,500 MXN</div>
+              <span style="font-size:9px;color:var(--text-muted);letter-spacing:1px;">3 días</span>
+            </div>
+            <button class="btn-gold" style="margin-top:16px;font-size:9px;padding:9px 20px;" onclick="event.stopPropagation();goPage('curso-detalle');setCurso('Maquillaje Nupcial Profesional','Presencial · Novias','$5,500 MXN','3 días intensivos','Intermedio','Especialización completa en maquillaje para novias: skin prep, airbrush, looks duraderos de larga duración, manejo emocional del día y cómo atender a tu clienta. Material incluido.','academia')">Ver más</button>
           </div>
         </div>
-        <div class="curso-card" onclick="goPage('contacto')">
+
+        <div class="curso-card" onclick="goPage('curso-detalle');setCurso('Cuidado de la Piel Avanzado','Online · Estética','$1,899 MXN','5 semanas','Intermedio','Rutinas skincare completas, tipos de piel, tratamientos hidratantes y antienvejecimiento. Con y sin aparatología. 20 clases grabadas con demostraciones en modelo.','academia')">
           <div class="curso-card-img"><div class="img-ph beauty-1" style="flex-direction:column;gap:8px;"><div style="font-size:36px;">💆</div><span style="font-size:9px;opacity:0.6;">imagen curso</span></div></div>
           <div class="curso-card-body">
             <span class="curso-tag">Online · Estética</span>
             <h3>Cuidado de la Piel Avanzado</h3>
             <p>Rutinas skincare, tipos de piel, tratamientos hidratantes y antienvejecimiento. Con y sin aparatología.</p>
-            <div class="curso-price">$1,899 MXN</div>
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-top:12px;">
+              <div class="curso-price">$1,899 MXN</div>
+              <span style="font-size:9px;color:var(--text-muted);letter-spacing:1px;">5 semanas</span>
+            </div>
+            <button class="btn-gold" style="margin-top:16px;font-size:9px;padding:9px 20px;" onclick="event.stopPropagation();goPage('curso-detalle');setCurso('Cuidado de la Piel Avanzado','Online · Estética','$1,899 MXN','5 semanas','Intermedio','Rutinas skincare completas, tipos de piel, tratamientos hidratantes y antienvejecimiento. Con y sin aparatología. 20 clases grabadas con demostraciones en modelo.','academia')">Ver más</button>
           </div>
         </div>
-        <div class="curso-card" onclick="goPage('contacto')">
+
+        <div class="curso-card" onclick="goPage('curso-detalle');setCurso('Emprende tu Negocio Beauty','Online · Negocio','$3,000 MXN','10 semanas','Todos los niveles','De artista a empresaria: estructura tu negocio, fija precios rentables, atrae clientes ideales y crece en redes sociales. Incluye plantillas descargables y mentoría grupal.','academia')">
           <div class="curso-card-img"><div class="img-ph beauty-2" style="flex-direction:column;gap:8px;"><div style="font-size:36px;">💼</div><span style="font-size:9px;opacity:0.6;">imagen curso</span></div></div>
           <div class="curso-card-body">
             <span class="curso-tag">Asesoría · Negocio</span>
             <h3>Emprende tu Negocio Beauty</h3>
             <p>De artista a empresaria: estructura tu negocio, fija precios, atrae clientes y crece en redes sociales.</p>
-            <div class="curso-price">$3,000 MXN</div>
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-top:12px;">
+              <div class="curso-price">$3,000 MXN</div>
+              <span style="font-size:9px;color:var(--text-muted);letter-spacing:1px;">10 semanas</span>
+            </div>
+            <button class="btn-gold" style="margin-top:16px;font-size:9px;padding:9px 20px;" onclick="event.stopPropagation();goPage('curso-detalle');setCurso('Emprende tu Negocio Beauty','Online · Negocio','$3,000 MXN','10 semanas','Todos los niveles','De artista a empresaria: estructura tu negocio, fija precios rentables, atrae clientes ideales y crece en redes sociales. Incluye plantillas descargables y mentoría grupal.','academia')">Ver más</button>
           </div>
         </div>
+
       </div>
     </div>
   </section>
@@ -1213,7 +1325,8 @@ section { padding:80px 0; }
         <button class="blog-filter" onclick="filterBlog('tendencias',this)">Tendencias</button>
       </div>
       <div class="blog-grid" id="blogGrid">
-        <div class="blog-card" data-cat="maquillaje" onclick="alert('Abriendo blog: 5 técnicas de contouring...')">
+
+        <div class="blog-card" data-cat="maquillaje" onclick="openBlog(0)">
           <div class="blog-card-img"><div class="img-ph beauty-1" style="flex-direction:column;gap:8px;"><div style="font-size:36px;">💄</div><span style="font-size:9px;opacity:0.6;">imagen blog</span></div></div>
           <div class="blog-card-body">
             <div class="blog-meta"><div class="blog-author-avatar">A</div><div class="blog-author-name">Areli Raya</div></div>
@@ -1221,10 +1334,11 @@ section { padding:80px 0; }
             <span class="blog-category">Maquillaje</span>
             <h3>5 técnicas de contouring que debes dominar en 2025</h3>
             <p>El contouring evolucionó. Descubre las técnicas más modernas que los maquillistas profesionales usan ahora.</p>
-            <button class="btn-gold" style="font-size:9px;padding:8px 20px;" onclick="event.stopPropagation();alert('Blog próximamente')">Leer más</button>
+            <button class="btn-gold" style="font-size:9px;padding:8px 20px;" onclick="event.stopPropagation();openBlog(0)">Leer más</button>
           </div>
         </div>
-        <div class="blog-card" data-cat="negocio" onclick="alert('Abriendo blog: Cómo fijar precios...')">
+
+        <div class="blog-card" data-cat="negocio" onclick="openBlog(1)">
           <div class="blog-card-img"><div class="img-ph beauty-2" style="flex-direction:column;gap:8px;"><div style="font-size:36px;">📊</div><span style="font-size:9px;opacity:0.6;">imagen blog</span></div></div>
           <div class="blog-card-body">
             <div class="blog-meta"><div class="blog-author-avatar">A</div><div class="blog-author-name">Areli Raya</div></div>
@@ -1232,10 +1346,11 @@ section { padding:80px 0; }
             <span class="blog-category">Negocio</span>
             <h3>Cómo fijar precios justos para tus servicios de belleza</h3>
             <p>Uno de los mayores retos para profesionales de la belleza es saber cuánto cobrar. Guía práctica.</p>
-            <button class="btn-gold" style="font-size:9px;padding:8px 20px;" onclick="event.stopPropagation();alert('Blog próximamente')">Leer más</button>
+            <button class="btn-gold" style="font-size:9px;padding:8px 20px;" onclick="event.stopPropagation();openBlog(1)">Leer más</button>
           </div>
         </div>
-        <div class="blog-card" data-cat="peinado" onclick="alert('Abriendo blog: Tendencias coloración...')">
+
+        <div class="blog-card" data-cat="peinado" onclick="openBlog(2)">
           <div class="blog-card-img"><div class="img-ph beauty-3" style="flex-direction:column;gap:8px;"><div style="font-size:36px;">💇</div><span style="font-size:9px;opacity:0.6;">imagen blog</span></div></div>
           <div class="blog-card-body">
             <div class="blog-meta"><div class="blog-author-avatar">A</div><div class="blog-author-name">Areli Raya</div></div>
@@ -1243,10 +1358,11 @@ section { padding:80px 0; }
             <span class="blog-category">Peinado</span>
             <h3>Tendencias de coloración para primavera-verano 2025</h3>
             <p>El balayage sigue siendo rey pero con nuevos giros. Descubre los colores que dominarán la temporada.</p>
-            <button class="btn-gold" style="font-size:9px;padding:8px 20px;" onclick="event.stopPropagation();alert('Blog próximamente')">Leer más</button>
+            <button class="btn-gold" style="font-size:9px;padding:8px 20px;" onclick="event.stopPropagation();openBlog(2)">Leer más</button>
           </div>
         </div>
-        <div class="blog-card" data-cat="piel" onclick="alert('Abriendo blog: Rutina skincare...')">
+
+        <div class="blog-card" data-cat="piel" onclick="openBlog(3)">
           <div class="blog-card-img"><div class="img-ph beauty-4" style="flex-direction:column;gap:8px;"><div style="font-size:36px;">🌿</div><span style="font-size:9px;opacity:0.6;">imagen blog</span></div></div>
           <div class="blog-card-body">
             <div class="blog-meta"><div class="blog-author-avatar">A</div><div class="blog-author-name">Areli Raya</div></div>
@@ -1254,10 +1370,11 @@ section { padding:80px 0; }
             <span class="blog-category">Cuidado de piel</span>
             <h3>Rutina skincare en 5 pasos para pieles mixtas</h3>
             <p>Simplifica tu rutina sin sacrificar resultados. Estos 5 pasos transformarán tu piel en semanas.</p>
-            <button class="btn-gold" style="font-size:9px;padding:8px 20px;" onclick="event.stopPropagation();alert('Blog próximamente')">Leer más</button>
+            <button class="btn-gold" style="font-size:9px;padding:8px 20px;" onclick="event.stopPropagation();openBlog(3)">Leer más</button>
           </div>
         </div>
-        <div class="blog-card" data-cat="tendencias" onclick="alert('Abriendo blog: No makeup trend...')">
+
+        <div class="blog-card" data-cat="tendencias" onclick="openBlog(4)">
           <div class="blog-card-img"><div class="img-ph beauty-1" style="flex-direction:column;gap:8px;"><div style="font-size:36px;">✨</div><span style="font-size:9px;opacity:0.6;">imagen blog</span></div></div>
           <div class="blog-card-body">
             <div class="blog-meta"><div class="blog-author-avatar">A</div><div class="blog-author-name">Areli Raya</div></div>
@@ -1265,10 +1382,11 @@ section { padding:80px 0; }
             <span class="blog-category">Tendencias</span>
             <h3>El maquillaje "no makeup" que arrasa en redes en 2025</h3>
             <p>La tendencia glass skin y el maquillaje natural crean el look más deseado del año.</p>
-            <button class="btn-gold" style="font-size:9px;padding:8px 20px;" onclick="event.stopPropagation();alert('Blog próximamente')">Leer más</button>
+            <button class="btn-gold" style="font-size:9px;padding:8px 20px;" onclick="event.stopPropagation();openBlog(4)">Leer más</button>
           </div>
         </div>
-        <div class="blog-card" data-cat="negocio" onclick="alert('Abriendo blog: Instagram 2025...')">
+
+        <div class="blog-card" data-cat="negocio" onclick="openBlog(5)">
           <div class="blog-card-img"><div class="img-ph beauty-2" style="flex-direction:column;gap:8px;"><div style="font-size:36px;">📱</div><span style="font-size:9px;opacity:0.6;">imagen blog</span></div></div>
           <div class="blog-card-body">
             <div class="blog-meta"><div class="blog-author-avatar">A</div><div class="blog-author-name">Areli Raya</div></div>
@@ -1276,13 +1394,62 @@ section { padding:80px 0; }
             <span class="blog-category">Negocio</span>
             <h3>Instagram para profesionales de la belleza: guía 2025</h3>
             <p>Esta es la estrategia actualizada para crecer tu cuenta y atraer clientes ideales en Instagram.</p>
-            <button class="btn-gold" style="font-size:9px;padding:8px 20px;" onclick="event.stopPropagation();alert('Blog próximamente')">Leer más</button>
+            <button class="btn-gold" style="font-size:9px;padding:8px 20px;" onclick="event.stopPropagation();openBlog(5)">Leer más</button>
           </div>
         </div>
+
       </div>
     </div>
   </section>
 
+</div>
+</div>
+
+<!-- ======== PÁGINA: BLOG DETALLE ======== -->
+<div class="page" id="page-blog-detalle">
+<div class="page-content">
+  <section style="background:var(--cream);padding:80px 0 100px;">
+    <div class="container" style="max-width:860px;">
+
+      <!-- BACK -->
+      <button onclick="goPage('blog')" style="display:inline-flex;align-items:center;gap:8px;padding:10px 22px;border:1px solid var(--border);background:transparent;font-family:'Josefin Sans',sans-serif;font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--text-muted);cursor:pointer;transition:all 0.3s;margin-bottom:40px;" onmouseover="this.style.borderColor='var(--gold)';this.style.color='var(--gold)'" onmouseout="this.style.borderColor='var(--border)';this.style.color='var(--text-muted)'">← Volver al Blog</button>
+
+      <!-- BLOG HERO IMAGE -->
+      <div id="blog-det-img" style="width:100%;padding-top:48%;position:relative;overflow:hidden;margin-bottom:40px;">
+        <div class="img-ph beauty-1" id="blog-det-img-inner" style="position:absolute;inset:0;flex-direction:column;gap:16px;">
+          <div style="font-size:64px;" id="blog-det-icon">💄</div>
+          <span style="font-size:10px;opacity:0.5;">imagen del blog</span>
+        </div>
+      </div>
+
+      <!-- META -->
+      <div style="display:flex;align-items:center;gap:16px;margin-bottom:20px;flex-wrap:wrap;">
+        <span id="blog-det-cat" style="font-size:8px;letter-spacing:3px;text-transform:uppercase;color:var(--gold);border:1px solid var(--border);padding:4px 14px;">Maquillaje</span>
+        <span id="blog-det-date" style="font-size:10px;color:var(--text-muted);letter-spacing:1px;">12 de marzo, 2025</span>
+        <div style="display:flex;align-items:center;gap:8px;">
+          <div style="width:28px;height:28px;border-radius:50%;background:linear-gradient(135deg,var(--oxford),var(--gold));display:flex;align-items:center;justify-content:center;color:var(--white);font-size:11px;font-family:'Cormorant Garamond',serif;">A</div>
+          <span style="font-size:10px;color:var(--oxford);letter-spacing:1px;">Areli Raya</span>
+        </div>
+      </div>
+
+      <!-- TITLE -->
+      <h1 id="blog-det-title" style="font-family:'Cormorant Garamond',serif;font-size:clamp(28px,4vw,52px);font-weight:300;color:var(--oxford-dark);line-height:1.2;margin-bottom:24px;"></h1>
+      <div style="width:60px;height:2px;background:linear-gradient(90deg,var(--gold),var(--gold-light));margin-bottom:36px;"></div>
+
+      <!-- CONTENT -->
+      <div id="blog-det-content" style="font-size:13px;line-height:2.2;color:var(--oxford-light);letter-spacing:0.3px;"></div>
+
+      <!-- FOOTER DEL BLOG -->
+      <div style="margin-top:60px;padding-top:40px;border-top:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:20px;">
+        <div>
+          <p style="font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--gold);margin-bottom:8px;">¿Te gustó este artículo?</p>
+          <p style="font-size:11px;color:var(--text-muted);">Compártelo con alguien que lo necesite 💛</p>
+        </div>
+        <button onclick="goPage('blog')" class="btn-gold" style="font-size:9px;padding:10px 24px;">← Más blogs</button>
+      </div>
+
+    </div>
+  </section>
 </div>
 </div>
 
@@ -1306,7 +1473,7 @@ section { padding:80px 0; }
           <div class="contact-block">
             <h4>Contacto Directo</h4>
             <a class="contact-item" href="https://wa.me/521234567890" target="_blank"><div class="contact-item-icon">💬</div><div class="contact-item-text">+52 123 456 7890 (WhatsApp)</div></a>
-            <a class="contact-item" href="mailto:hola@metabeauty.mx"><div class="contact-item-icon">✉</div><div class="contact-item-text">hola@metabeauty.mx</div></a>
+            <a class="contact-item" href="/cdn-cgi/l/email-protection#147c7b7875547971607576717561606d3a796c"><div class="contact-item-icon">✉</div><div class="contact-item-text"><span class="__cf_email__" data-cfemail="82eaedeee3c2efe7f6e3e0e7e3f7f6fbaceffa">[email&#160;protected]</span></div></a>
             <div class="contact-item"><div class="contact-item-icon">📍</div><div class="contact-item-text">Col. Polanco, CDMX</div></div>
           </div>
           <div class="contact-block">
@@ -1348,7 +1515,7 @@ section { padding:80px 0; }
         <h3>Finalidades del tratamiento</h3>
         <p>Procesar inscripciones, enviar información (previo consentimiento), facturación y mejora de nuestra plataforma.</p>
         <h3>Derechos ARCO</h3>
-        <p>Tiene derecho a Acceder, Rectificar, Cancelar u Oponerse al tratamiento enviando un correo a: privacidad@metabeauty.mx</p>
+        <p>Tiene derecho a Acceder, Rectificar, Cancelar u Oponerse al tratamiento enviando un correo a: <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="90e0e2f9e6f1f3f9f4f1f4d0fdf5e4f1f2f5f1e5e4e9befde8">[email&#160;protected]</a></p>
         <p style="margin-top:32px;font-size:11px;color:var(--text-muted);">Última actualización: enero 2025</p>
       </div>
     </div>
@@ -1370,6 +1537,524 @@ section { padding:80px 0; }
         <div class="faq-item" onclick="toggleFaq(this)"><div class="faq-q"><h4>¿Ofrecen financiamiento o pagos a meses?</h4><div class="faq-icon">+</div></div><div class="faq-a">Sí, ofrecemos opciones de pago en mensualidades para la mayoría de nuestros cursos. Contáctanos por WhatsApp para conocer los planes.</div></div>
         <div class="faq-item" onclick="toggleFaq(this)"><div class="faq-q"><h4>¿Los talleres presenciales incluyen materiales?</h4><div class="faq-icon">+</div></div><div class="faq-a">Sí, todos nuestros talleres presenciales incluyen el kit de materiales necesarios. No necesitas traer nada más que ganas de aprender.</div></div>
         <div class="faq-item" onclick="toggleFaq(this)"><div class="faq-q"><h4>¿Tienen política de reembolso?</h4><div class="faq-icon">+</div></div><div class="faq-a">Para cursos online ofrecemos garantía de satisfacción de 7 días. Si no cumplió tus expectativas, realizamos el reembolso completo sin preguntas.</div></div>
+      </div>
+    </div>
+  </section>
+</div>
+</div>
+
+<!-- ======== SUBPÁGINA: ACADEMIA ONLINE ======== -->
+<div class="page" id="page-academia-online">
+<div class="page-content with-search">
+
+  <!-- BREADCRUMB -->
+  <div class="breadcrumb">
+    <a onclick="goPage('inicio')">Inicio</a>
+    <span class="breadcrumb-sep">›</span>
+    <a onclick="goPage('academia')">Academia</a>
+    <span class="breadcrumb-sep">›</span>
+    <span class="breadcrumb-current">Online</span>
+  </div>
+  <!-- SUBNAV TABS -->
+  <div class="subpage-tabs">
+    <button class="subpage-tab active" onclick="goPage('academia-online')">💻 Online</button>
+    <button class="subpage-tab" onclick="goPage('academia-presencial')">🏫 Presencial</button>
+    <button class="subpage-tab" onclick="goPage('academia-asesorias')">🎯 Asesorías</button>
+  </div>
+
+  <!-- HERO -->
+  <div class="sub-hero" style="position:relative;height:420px;overflow:hidden;display:flex;align-items:center;justify-content:center;">
+    <div style="position:absolute;inset:0;background:linear-gradient(135deg,#0d1020,#1a1535,#2a1840);"></div>
+    <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;opacity:0.08;font-size:300px;">💻</div>
+    <div style="position:absolute;inset:0;background:linear-gradient(to bottom,transparent 40%,rgba(26,30,42,0.8));"></div>
+    <div style="position:relative;z-index:2;text-align:center;padding:0 24px;">
+      <span style="font-size:9px;letter-spacing:5px;text-transform:uppercase;color:var(--gold);display:block;margin-bottom:16px;">Metabeauty</span>
+      <h1 style="font-family:'Cormorant Garamond',serif;font-size:clamp(36px,5vw,68px);color:var(--white);font-weight:300;margin-bottom:16px;">Academia <em style="color:var(--gold)">Online</em></h1>
+      <div class="gold-line center"></div>
+      <p style="font-size:12px;letter-spacing:1.5px;color:rgba(255,255,255,0.6);max-width:560px;margin:0 auto 32px;line-height:1.9;">Aprende desde donde estés, a tu propio ritmo, con acceso de por vida a todos los materiales y una comunidad de profesionales que te acompañan.</p>
+      <button class="btn-gold" onclick="document.getElementById('cursos-online').scrollIntoView({behavior:'smooth'})">Ver cursos ↓</button>
+    </div>
+  </div>
+
+  <!-- CURSOS -->
+  <section style="background:var(--cream);padding:80px 0;" id="cursos-online">
+    <div class="container">
+      <span class="about-tag">Modalidad Online</span>
+      <h2 style="font-family:'Cormorant Garamond',serif;font-size:clamp(26px,3.5vw,44px);font-weight:300;color:var(--oxford-dark);margin-bottom:8px;">Cursos Online</h2>
+      <div class="gold-line"></div>
+
+      <!-- FILTROS -->
+      <div style="display:flex;gap:10px;flex-wrap:wrap;margin:32px 0 36px;">
+        <button class="blog-filter active" onclick="filterCursos('online','todos',this)">Todos</button>
+        <button class="blog-filter" onclick="filterCursos('online','maquillaje',this)">Maquillaje</button>
+        <button class="blog-filter" onclick="filterCursos('online','cabello',this)">Cabello</button>
+        <button class="blog-filter" onclick="filterCursos('online','imagen',this)">Imagen</button>
+        <button class="blog-filter" onclick="filterCursos('online','piel',this)">Piel</button>
+        <button class="blog-filter" onclick="filterCursos('online','negocio',this)">Negocio</button>
+      </div>
+
+      <div class="cursos-grid" id="grid-online">
+
+        <div class="curso-card" data-cat="maquillaje" data-mod="online" onclick="goPage('curso-detalle');setCurso('Maquillaje Profesional desde Cero','Online · Maquillaje','$1,499 MXN','8 semanas','Principiante','Aprende las bases del maquillaje profesional: preparación de piel, técnicas de aplicación, corrección, contouring y looks para toda ocasión. Incluye 24 clases grabadas y acceso de por vida.')">
+          <div class="curso-card-img"><div class="img-ph beauty-1" style="flex-direction:column;gap:8px;cursor:pointer;"><div style="font-size:36px;">✨</div><span style="font-size:9px;opacity:0.6;">imagen curso</span></div></div>
+          <div class="curso-card-body">
+            <span class="curso-tag">Online · Maquillaje</span>
+            <h3>Maquillaje Profesional desde Cero</h3>
+            <p>Bases del maquillaje: preparación de piel, aplicación y looks para toda ocasión. 24 clases grabadas.</p>
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-top:12px;">
+              <div class="curso-price">$1,499 MXN</div>
+              <span style="font-size:9px;color:var(--text-muted);letter-spacing:1px;">8 semanas</span>
+            </div>
+            <button class="btn-gold" style="margin-top:16px;font-size:9px;padding:9px 20px;" onclick="event.stopPropagation();goPage('curso-detalle');setCurso('Maquillaje Profesional desde Cero','Online · Maquillaje','$1,499 MXN','8 semanas','Principiante','Aprende las bases del maquillaje profesional: preparación de piel, técnicas de aplicación, corrección, contouring y looks para toda ocasión. Incluye 24 clases grabadas y acceso de por vida.')">Ver más</button>
+          </div>
+        </div>
+
+        <div class="curso-card" data-cat="imagen" data-mod="online" onclick="goPage('curso-detalle');setCurso('Consultoría de Imagen Personal','Online · Imagen','$2,200 MXN','6 semanas','Todos los niveles','Construye una identidad visual poderosa. Aprende colorimetría personal, morfología de rostro, estilos y cómo asesorar a tus propios clientes con confianza.')">
+          <div class="curso-card-img"><div class="img-ph beauty-3" style="flex-direction:column;gap:8px;cursor:pointer;"><div style="font-size:36px;">🌟</div><span style="font-size:9px;opacity:0.6;">imagen curso</span></div></div>
+          <div class="curso-card-body">
+            <span class="curso-tag">Online · Imagen</span>
+            <h3>Consultoría de Imagen Personal</h3>
+            <p>Colorimetría personal, morfología, estilos y cómo asesorar a tus clientes. 18 clases grabadas.</p>
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-top:12px;">
+              <div class="curso-price">$2,200 MXN</div>
+              <span style="font-size:9px;color:var(--text-muted);letter-spacing:1px;">6 semanas</span>
+            </div>
+            <button class="btn-gold" style="margin-top:16px;font-size:9px;padding:9px 20px;" onclick="event.stopPropagation();goPage('curso-detalle');setCurso('Consultoría de Imagen Personal','Online · Imagen','$2,200 MXN','6 semanas','Todos los niveles','Construye una identidad visual poderosa. Aprende colorimetría personal, morfología de rostro, estilos y cómo asesorar a tus propios clientes con confianza.')">Ver más</button>
+          </div>
+        </div>
+
+        <div class="curso-card" data-cat="piel" data-mod="online" onclick="goPage('curso-detalle');setCurso('Cuidado de la Piel Avanzado','Online · Estética','$1,899 MXN','5 semanas','Intermedio','Rutinas skincare completas, tipos de piel, tratamientos hidratantes y antienvejecimiento. Con y sin aparatología. 20 clases grabadas con demostraciones en modelo.')">
+          <div class="curso-card-img"><div class="img-ph beauty-2" style="flex-direction:column;gap:8px;cursor:pointer;"><div style="font-size:36px;">💆</div><span style="font-size:9px;opacity:0.6;">imagen curso</span></div></div>
+          <div class="curso-card-body">
+            <span class="curso-tag">Online · Estética</span>
+            <h3>Cuidado de la Piel Avanzado</h3>
+            <p>Rutinas skincare, tipos de piel, tratamientos hidratantes y antienvejecimiento. Con y sin aparatología.</p>
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-top:12px;">
+              <div class="curso-price">$1,899 MXN</div>
+              <span style="font-size:9px;color:var(--text-muted);letter-spacing:1px;">5 semanas</span>
+            </div>
+            <button class="btn-gold" style="margin-top:16px;font-size:9px;padding:9px 20px;" onclick="event.stopPropagation();goPage('curso-detalle');setCurso('Cuidado de la Piel Avanzado','Online · Estética','$1,899 MXN','5 semanas','Intermedio','Rutinas skincare completas, tipos de piel, tratamientos hidratantes y antienvejecimiento. Con y sin aparatología. 20 clases grabadas con demostraciones en modelo.')">Ver más</button>
+          </div>
+        </div>
+
+        <div class="curso-card" data-cat="negocio" data-mod="online" onclick="goPage('curso-detalle');setCurso('Emprende tu Negocio Beauty','Online · Negocio','$3,000 MXN','10 semanas','Todos los niveles','De artista a empresaria: estructura tu negocio, fija precios rentables, atrae clientes ideales y crece en redes sociales. Incluye plantillas descargables y mentoría grupal.')">
+          <div class="curso-card-img"><div class="img-ph beauty-4" style="flex-direction:column;gap:8px;cursor:pointer;"><div style="font-size:36px;">💼</div><span style="font-size:9px;opacity:0.6;">imagen curso</span></div></div>
+          <div class="curso-card-body">
+            <span class="curso-tag">Online · Negocio</span>
+            <h3>Emprende tu Negocio Beauty</h3>
+            <p>De artista a empresaria: estructura, precios, atracción de clientes y estrategia en redes sociales.</p>
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-top:12px;">
+              <div class="curso-price">$3,000 MXN</div>
+              <span style="font-size:9px;color:var(--text-muted);letter-spacing:1px;">10 semanas</span>
+            </div>
+            <button class="btn-gold" style="margin-top:16px;font-size:9px;padding:9px 20px;" onclick="event.stopPropagation();goPage('curso-detalle');setCurso('Emprende tu Negocio Beauty','Online · Negocio','$3,000 MXN','10 semanas','Todos los niveles','De artista a empresaria: estructura tu negocio, fija precios rentables, atrae clientes ideales y crece en redes sociales. Incluye plantillas descargables y mentoría grupal.')">Ver más</button>
+          </div>
+        </div>
+
+        <div class="curso-card" data-cat="maquillaje" data-mod="online" onclick="goPage('curso-detalle');setCurso('Técnicas de Contouring Profesional','Online · Maquillaje','$1,200 MXN','4 semanas','Intermedio','Domina el contouring facial y corporal con técnicas de maquillistas de cine y editorial. Aprende a adaptar cada técnica según morfología de rostro y tipo de evento.')">
+          <div class="curso-card-img"><div class="img-ph beauty-1" style="flex-direction:column;gap:8px;cursor:pointer;"><div style="font-size:36px;">🎨</div><span style="font-size:9px;opacity:0.6;">imagen curso</span></div></div>
+          <div class="curso-card-body">
+            <span class="curso-tag">Online · Maquillaje</span>
+            <h3>Técnicas de Contouring Profesional</h3>
+            <p>Contouring facial y corporal avanzado adaptado a distintas morfologías y ocasiones.</p>
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-top:12px;">
+              <div class="curso-price">$1,200 MXN</div>
+              <span style="font-size:9px;color:var(--text-muted);letter-spacing:1px;">4 semanas</span>
+            </div>
+            <button class="btn-gold" style="margin-top:16px;font-size:9px;padding:9px 20px;" onclick="event.stopPropagation();goPage('curso-detalle');setCurso('Técnicas de Contouring Profesional','Online · Maquillaje','$1,200 MXN','4 semanas','Intermedio','Domina el contouring facial y corporal con técnicas de maquillistas de cine y editorial. Aprende a adaptar cada técnica según morfología de rostro y tipo de evento.')">Ver más</button>
+          </div>
+        </div>
+
+        <div class="curso-card" data-cat="cabello" data-mod="online" onclick="goPage('curso-detalle');setCurso('Colorimetría Capilar Online','Online · Cabello','$2,500 MXN','7 semanas','Todos los niveles','Aprende la teoría del color aplicada al cabello: corrección, formulación y las técnicas más solicitadas del mercado. Incluye guías descargables y quizzes de evaluación.')">
+          <div class="curso-card-img"><div class="img-ph beauty-3" style="flex-direction:column;gap:8px;cursor:pointer;"><div style="font-size:36px;">🎨</div><span style="font-size:9px;opacity:0.6;">imagen curso</span></div></div>
+          <div class="curso-card-body">
+            <span class="curso-tag">Online · Cabello</span>
+            <h3>Colorimetría Capilar Online</h3>
+            <p>Teoría del color, corrección, formulación y técnicas más solicitadas del mercado. Guías incluidas.</p>
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-top:12px;">
+              <div class="curso-price">$2,500 MXN</div>
+              <span style="font-size:9px;color:var(--text-muted);letter-spacing:1px;">7 semanas</span>
+            </div>
+            <button class="btn-gold" style="margin-top:16px;font-size:9px;padding:9px 20px;" onclick="event.stopPropagation();goPage('curso-detalle');setCurso('Colorimetría Capilar Online','Online · Cabello','$2,500 MXN','7 semanas','Todos los niveles','Aprende la teoría del color aplicada al cabello: corrección, formulación y las técnicas más solicitadas del mercado. Incluye guías descargables y quizzes de evaluación.')">Ver más</button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- MÉTODO DE PAGO -->
+  <section style="background:var(--oxford-dark);padding:70px 0;">
+    <div class="container">
+      <h2 style="font-family:'Cormorant Garamond',serif;font-size:clamp(24px,3vw,40px);color:var(--white);font-weight:300;text-align:center;margin-bottom:52px;">Método de Pago</h2>
+      <div class="metodo-steps">
+        <div class="metodo-step"><div class="step-num">01</div><h4>Elige tu curso</h4><p>Selecciona el curso que quieres tomar y haz clic en "Ver más" para ver todos los detalles.</p></div>
+        <div class="metodo-step"><div class="step-num">02</div><h4>Contáctanos</h4><p>Escríbenos por WhatsApp o correo. Te confirmamos disponibilidad y te enviamos el link de pago.</p></div>
+        <div class="metodo-step"><div class="step-num">03</div><h4>Elige tu forma de pago</h4><p>Aceptamos tarjeta de crédito/débito, transferencia bancaria y meses sin intereses con bancos participantes.</p></div>
+        <div class="metodo-step"><div class="step-num">04</div><h4>Confirma y accede</h4><p>Una vez confirmado tu pago, recibes acceso inmediato. En minutos ya puedes empezar a aprender.</p></div>
+      </div>
+      <div style="text-align:center;margin-top:48px;">
+        <a href="https://wa.me/521234567890" target="_blank" class="btn-gold-filled">Inscribirme por WhatsApp</a>
+      </div>
+    </div>
+  </section>
+
+</div>
+</div>
+
+<!-- ======== SUBPÁGINA: ACADEMIA PRESENCIAL ======== -->
+<div class="page" id="page-academia-presencial">
+<div class="page-content with-search">
+
+  <!-- BREADCRUMB -->
+  <div class="breadcrumb">
+    <a onclick="goPage('inicio')">Inicio</a>
+    <span class="breadcrumb-sep">›</span>
+    <a onclick="goPage('academia')">Academia</a>
+    <span class="breadcrumb-sep">›</span>
+    <span class="breadcrumb-current">Presencial</span>
+  </div>
+  <!-- SUBNAV TABS -->
+  <div class="subpage-tabs">
+    <button class="subpage-tab" onclick="goPage('academia-online')">💻 Online</button>
+    <button class="subpage-tab active" onclick="goPage('academia-presencial')">🏫 Presencial</button>
+    <button class="subpage-tab" onclick="goPage('academia-asesorias')">🎯 Asesorías</button>
+  </div>
+
+  <!-- HERO -->
+  <div style="position:relative;height:420px;overflow:hidden;display:flex;align-items:center;justify-content:center;">
+    <div style="position:absolute;inset:0;background:linear-gradient(135deg,#0d1520,#152535,#1a3040);"></div>
+    <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;opacity:0.08;font-size:300px;">🏫</div>
+    <div style="position:absolute;inset:0;background:linear-gradient(to bottom,transparent 40%,rgba(26,30,42,0.8));"></div>
+    <div style="position:relative;z-index:2;text-align:center;padding:0 24px;">
+      <span style="font-size:9px;letter-spacing:5px;text-transform:uppercase;color:var(--gold);display:block;margin-bottom:16px;">Metabeauty</span>
+      <h1 style="font-family:'Cormorant Garamond',serif;font-size:clamp(36px,5vw,68px);color:var(--white);font-weight:300;margin-bottom:16px;">Academia <em style="color:var(--gold)">Presencial</em></h1>
+      <div class="gold-line center"></div>
+      <p style="font-size:12px;letter-spacing:1.5px;color:rgba(255,255,255,0.6);max-width:560px;margin:0 auto 32px;line-height:1.9;">Talleres intensivos en nuestro estudio en CDMX. Práctica real, grupos pequeños, material incluido y certificado al finalizar.</p>
+      <button class="btn-gold" onclick="document.getElementById('cursos-presencial').scrollIntoView({behavior:'smooth'})">Ver talleres ↓</button>
+    </div>
+  </div>
+
+  <!-- CURSOS -->
+  <section style="background:var(--cream);padding:80px 0;" id="cursos-presencial">
+    <div class="container">
+      <span class="about-tag">Modalidad Presencial · CDMX</span>
+      <h2 style="font-family:'Cormorant Garamond',serif;font-size:clamp(26px,3.5vw,44px);font-weight:300;color:var(--oxford-dark);margin-bottom:8px;">Talleres Presenciales</h2>
+      <div class="gold-line"></div>
+
+      <div style="display:flex;gap:10px;flex-wrap:wrap;margin:32px 0 36px;">
+        <button class="blog-filter active" onclick="filterCursos('presencial','todos',this)">Todos</button>
+        <button class="blog-filter" onclick="filterCursos('presencial','maquillaje',this)">Maquillaje</button>
+        <button class="blog-filter" onclick="filterCursos('presencial','cabello',this)">Cabello</button>
+        <button class="blog-filter" onclick="filterCursos('presencial','novia',this)">Novias</button>
+        <button class="blog-filter" onclick="filterCursos('presencial','imagen',this)">Imagen</button>
+      </div>
+
+      <div class="cursos-grid" id="grid-presencial">
+
+        <div class="curso-card" data-cat="cabello" data-mod="presencial" onclick="goPage('curso-detalle');setCurso('Colorimetría Avanzada — Presencial','Presencial · Cabello','$4,800 MXN','2 días intensivos','Intermedio','Taller intensivo de 2 días donde dominarás balayage, mechas californianas, iluminación y corrección de color. Material incluido, modelo real en práctica y certificado al finalizar.')">
+          <div class="curso-card-img"><div class="img-ph beauty-2" style="flex-direction:column;gap:8px;cursor:pointer;"><div style="font-size:36px;">💇</div><span style="font-size:9px;opacity:0.6;">imagen taller</span></div></div>
+          <div class="curso-card-body">
+            <span class="curso-tag">Presencial · Cabello</span>
+            <h3>Colorimetría Avanzada</h3>
+            <p>Balayage, mechas, iluminación y corrección. 2 días intensivos con modelo real y material incluido.</p>
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-top:12px;">
+              <div class="curso-price">$4,800 MXN</div>
+              <span style="font-size:9px;color:var(--text-muted);letter-spacing:1px;">2 días</span>
+            </div>
+            <button class="btn-gold" style="margin-top:16px;font-size:9px;padding:9px 20px;" onclick="event.stopPropagation();goPage('curso-detalle');setCurso('Colorimetría Avanzada — Presencial','Presencial · Cabello','$4,800 MXN','2 días intensivos','Intermedio','Taller intensivo de 2 días donde dominarás balayage, mechas californianas, iluminación y corrección de color. Material incluido, modelo real en práctica y certificado al finalizar.')">Ver más</button>
+          </div>
+        </div>
+
+        <div class="curso-card" data-cat="novia" data-mod="presencial" onclick="goPage('curso-detalle');setCurso('Maquillaje Nupcial Profesional','Presencial · Novias','$5,500 MXN','3 días intensivos','Intermedio','Especialización completa en maquillaje para novias: skin prep, airbrush, looks duraderos de larga duración, manejo emocional del día y cómo atender a tu clienta. Material incluido.')">
+          <div class="curso-card-img"><div class="img-ph beauty-4" style="flex-direction:column;gap:8px;cursor:pointer;"><div style="font-size:36px;">👰</div><span style="font-size:9px;opacity:0.6;">imagen taller</span></div></div>
+          <div class="curso-card-body">
+            <span class="curso-tag">Presencial · Novias</span>
+            <h3>Maquillaje Nupcial Profesional</h3>
+            <p>Skin prep, airbrush, looks duraderos, manejo emocional y atención a clientas el día de boda.</p>
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-top:12px;">
+              <div class="curso-price">$5,500 MXN</div>
+              <span style="font-size:9px;color:var(--text-muted);letter-spacing:1px;">3 días</span>
+            </div>
+            <button class="btn-gold" style="margin-top:16px;font-size:9px;padding:9px 20px;" onclick="event.stopPropagation();goPage('curso-detalle');setCurso('Maquillaje Nupcial Profesional','Presencial · Novias','$5,500 MXN','3 días intensivos','Intermedio','Especialización completa en maquillaje para novias: skin prep, airbrush, looks duraderos de larga duración, manejo emocional del día y cómo atender a tu clienta. Material incluido.')">Ver más</button>
+          </div>
+        </div>
+
+        <div class="curso-card" data-cat="maquillaje" data-mod="presencial" onclick="goPage('curso-detalle');setCurso('Maquillaje Artístico & Editorial','Presencial · Maquillaje','$6,200 MXN','4 días intensivos','Avanzado','Técnicas de maquillaje para editorial, teatro, cine y arte. Aprende a crear looks conceptuales, trabajar con fotografía y dominar productos de maquillaje especial efecto.')">
+          <div class="curso-card-img"><div class="img-ph beauty-1" style="flex-direction:column;gap:8px;cursor:pointer;"><div style="font-size:36px;">🎭</div><span style="font-size:9px;opacity:0.6;">imagen taller</span></div></div>
+          <div class="curso-card-body">
+            <span class="curso-tag">Presencial · Maquillaje</span>
+            <h3>Maquillaje Artístico & Editorial</h3>
+            <p>Técnicas para teatro, cine, editorial. Looks conceptuales y maquillaje especial efecto.</p>
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-top:12px;">
+              <div class="curso-price">$6,200 MXN</div>
+              <span style="font-size:9px;color:var(--text-muted);letter-spacing:1px;">4 días</span>
+            </div>
+            <button class="btn-gold" style="margin-top:16px;font-size:9px;padding:9px 20px;" onclick="event.stopPropagation();goPage('curso-detalle');setCurso('Maquillaje Artístico & Editorial','Presencial · Maquillaje','$6,200 MXN','4 días intensivos','Avanzado','Técnicas de maquillaje para editorial, teatro, cine y arte. Aprende a crear looks conceptuales, trabajar con fotografía y dominar productos de maquillaje especial efecto.')">Ver más</button>
+          </div>
+        </div>
+
+        <div class="curso-card" data-cat="imagen" data-mod="presencial" onclick="goPage('curso-detalle');setCurso('Asesoría de Imagen — Taller Presencial','Presencial · Imagen','$3,800 MXN','1 día intensivo','Todos los niveles','Taller práctico de análisis de imagen: colorimetría personal en persona, diagnóstico de silueta, tipos de estilo y construcción de guardarropa cápsula. Dinámicas con compañeras.')">
+          <div class="curso-card-img"><div class="img-ph beauty-3" style="flex-direction:column;gap:8px;cursor:pointer;"><div style="font-size:36px;">✨</div><span style="font-size:9px;opacity:0.6;">imagen taller</span></div></div>
+          <div class="curso-card-body">
+            <span class="curso-tag">Presencial · Imagen</span>
+            <h3>Asesoría de Imagen — Taller</h3>
+            <p>Colorimetría en persona, diagnóstico de silueta y construcción de guardarropa cápsula.</p>
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-top:12px;">
+              <div class="curso-price">$3,800 MXN</div>
+              <span style="font-size:9px;color:var(--text-muted);letter-spacing:1px;">1 día</span>
+            </div>
+            <button class="btn-gold" style="margin-top:16px;font-size:9px;padding:9px 20px;" onclick="event.stopPropagation();goPage('curso-detalle');setCurso('Asesoría de Imagen — Taller Presencial','Presencial · Imagen','$3,800 MXN','1 día intensivo','Todos los niveles','Taller práctico de análisis de imagen: colorimetría personal en persona, diagnóstico de silueta, tipos de estilo y construcción de guardarropa cápsula. Dinámicas con compañeras.')">Ver más</button>
+          </div>
+        </div>
+
+        <div class="curso-card" data-cat="cabello" data-mod="presencial" onclick="goPage('curso-detalle');setCurso('Peinados para Eventos & Bodas','Presencial · Cabello','$4,200 MXN','2 días intensivos','Principiante','Aprende los recogidos, ondas y peinados más solicitados para bodas y eventos especiales. Práctica con modelos reales. Incluye técnicas express para trabajo en tiempo real.')">
+          <div class="curso-card-img"><div class="img-ph beauty-2" style="flex-direction:column;gap:8px;cursor:pointer;"><div style="font-size:36px;">💍</div><span style="font-size:9px;opacity:0.6;">imagen taller</span></div></div>
+          <div class="curso-card-body">
+            <span class="curso-tag">Presencial · Cabello</span>
+            <h3>Peinados para Eventos & Bodas</h3>
+            <p>Recogidos, ondas y peinados de boda más solicitados. Práctica con modelos reales.</p>
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-top:12px;">
+              <div class="curso-price">$4,200 MXN</div>
+              <span style="font-size:9px;color:var(--text-muted);letter-spacing:1px;">2 días</span>
+            </div>
+            <button class="btn-gold" style="margin-top:16px;font-size:9px;padding:9px 20px;" onclick="event.stopPropagation();goPage('curso-detalle');setCurso('Peinados para Eventos & Bodas','Presencial · Cabello','$4,200 MXN','2 días intensivos','Principiante','Aprende los recogidos, ondas y peinados más solicitados para bodas y eventos especiales. Práctica con modelos reales. Incluye técnicas express para trabajo en tiempo real.')">Ver más</button>
+          </div>
+        </div>
+
+        <div class="curso-card" data-cat="maquillaje" data-mod="presencial" onclick="goPage('curso-detalle');setCurso('Maquillaje Integral Profesional','Presencial · Maquillaje','$7,500 MXN','1 semana intensiva','Principiante','Programa completo de maquillaje para principiantes: desde teoría del color hasta looks de noche, día y eventos. El curso más completo de Metabeauty. Material incluido, certificado avalado.')">
+          <div class="curso-card-img"><div class="img-ph beauty-4" style="flex-direction:column;gap:8px;cursor:pointer;"><div style="font-size:36px;">💄</div><span style="font-size:9px;opacity:0.6;">imagen taller</span></div></div>
+          <div class="curso-card-body">
+            <span class="curso-tag">Presencial · Maquillaje</span>
+            <h3>Maquillaje Integral Profesional</h3>
+            <p>Programa completo de 1 semana. De cero a profesional con certificado avalado. Material incluido.</p>
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-top:12px;">
+              <div class="curso-price">$7,500 MXN</div>
+              <span style="font-size:9px;color:var(--text-muted);letter-spacing:1px;">1 semana</span>
+            </div>
+            <button class="btn-gold" style="margin-top:16px;font-size:9px;padding:9px 20px;" onclick="event.stopPropagation();goPage('curso-detalle');setCurso('Maquillaje Integral Profesional','Presencial · Maquillaje','$7,500 MXN','1 semana intensiva','Principiante','Programa completo de maquillaje para principiantes: desde teoría del color hasta looks de noche, día y eventos. El curso más completo de Metabeauty. Material incluido, certificado avalado.')">Ver más</button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- MÉTODO DE PAGO -->
+  <section style="background:var(--oxford-dark);padding:70px 0;">
+    <div class="container">
+      <h2 style="font-family:'Cormorant Garamond',serif;font-size:clamp(24px,3vw,40px);color:var(--white);font-weight:300;text-align:center;margin-bottom:52px;">Método de Pago</h2>
+      <div class="metodo-steps">
+        <div class="metodo-step"><div class="step-num">01</div><h4>Elige tu taller</h4><p>Selecciona el taller que te interesa y verifica fechas disponibles. Los grupos son de máx. 8 personas.</p></div>
+        <div class="metodo-step"><div class="step-num">02</div><h4>Reserva con anticipo</h4><p>Para separar tu lugar pagás el 50% de anticipo. Aceptamos tarjeta, transferencia y depósito.</p></div>
+        <div class="metodo-step"><div class="step-num">03</div><h4>Liquida antes del taller</h4><p>El saldo restante se paga hasta 24 horas antes del inicio del taller. Sin cargos adicionales.</p></div>
+        <div class="metodo-step"><div class="step-num">04</div><h4>Meses sin intereses</h4><p>Contamos con opciones de 3, 6 y 12 meses sin intereses con tarjetas de crédito participantes.</p></div>
+      </div>
+      <div style="text-align:center;margin-top:48px;">
+        <a href="https://wa.me/521234567890" target="_blank" class="btn-gold-filled">Reservar mi lugar</a>
+      </div>
+    </div>
+  </section>
+
+</div>
+</div>
+
+<!-- ======== SUBPÁGINA: ASESORÍAS ======== -->
+<div class="page" id="page-academia-asesorias">
+<div class="page-content with-search">
+
+  <!-- BREADCRUMB -->
+  <div class="breadcrumb">
+    <a onclick="goPage('inicio')">Inicio</a>
+    <span class="breadcrumb-sep">›</span>
+    <a onclick="goPage('academia')">Academia</a>
+    <span class="breadcrumb-sep">›</span>
+    <span class="breadcrumb-current">Asesorías</span>
+  </div>
+  <!-- SUBNAV TABS -->
+  <div class="subpage-tabs">
+    <button class="subpage-tab" onclick="goPage('academia-online')">💻 Online</button>
+    <button class="subpage-tab" onclick="goPage('academia-presencial')">🏫 Presencial</button>
+    <button class="subpage-tab active" onclick="goPage('academia-asesorias')">🎯 Asesorías</button>
+  </div>
+
+  <!-- HERO -->
+  <div style="position:relative;height:420px;overflow:hidden;display:flex;align-items:center;justify-content:center;">
+    <div style="position:absolute;inset:0;background:linear-gradient(135deg,#140d10,#241520,#2c1a1a,#c9a84c11);"></div>
+    <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;opacity:0.08;font-size:300px;">🎯</div>
+    <div style="position:absolute;inset:0;background:linear-gradient(to bottom,transparent 40%,rgba(26,30,42,0.8));"></div>
+    <div style="position:relative;z-index:2;text-align:center;padding:0 24px;">
+      <span style="font-size:9px;letter-spacing:5px;text-transform:uppercase;color:var(--gold);display:block;margin-bottom:16px;">Metabeauty</span>
+      <h1 style="font-family:'Cormorant Garamond',serif;font-size:clamp(36px,5vw,68px);color:var(--white);font-weight:300;margin-bottom:16px;"><em style="color:var(--gold)">Asesorías</em> Personalizadas</h1>
+      <div class="gold-line center"></div>
+      <p style="font-size:12px;letter-spacing:1.5px;color:rgba(255,255,255,0.6);max-width:560px;margin:0 auto 32px;line-height:1.9;">Sesiones 1:1 con Areli Raya o nuestras instructoras certificadas. Mentoría diseñada exactamente para tus metas y tu momento profesional.</p>
+      <button class="btn-gold" onclick="document.getElementById('cursos-asesorias').scrollIntoView({behavior:'smooth'})">Ver asesorías ↓</button>
+    </div>
+  </div>
+
+  <!-- ASESORÍAS -->
+  <section style="background:var(--cream);padding:80px 0;" id="cursos-asesorias">
+    <div class="container">
+      <span class="about-tag">Sesiones Personalizadas</span>
+      <h2 style="font-family:'Cormorant Garamond',serif;font-size:clamp(26px,3.5vw,44px);font-weight:300;color:var(--oxford-dark);margin-bottom:8px;">Asesorías & Mentorías</h2>
+      <div class="gold-line"></div>
+
+      <div style="display:flex;gap:10px;flex-wrap:wrap;margin:32px 0 36px;">
+        <button class="blog-filter active" onclick="filterCursos('asesorias','todos',this)">Todas</button>
+        <button class="blog-filter" onclick="filterCursos('asesorias','negocio',this)">Negocio</button>
+        <button class="blog-filter" onclick="filterCursos('asesorias','tecnica',this)">Técnica</button>
+        <button class="blog-filter" onclick="filterCursos('asesorias','imagen',this)">Imagen</button>
+        <button class="blog-filter" onclick="filterCursos('asesorias','marca',this)">Marca Personal</button>
+      </div>
+
+      <div class="cursos-grid" id="grid-asesorias">
+
+        <div class="curso-card" data-cat="negocio" data-mod="asesorias" onclick="goPage('curso-detalle');setCurso('Mentoría de Negocio Beauty 1:1','Asesoría · Negocio','$2,500 MXN / sesión','90 minutos','Todos los niveles','Sesión individual con Areli Raya para analizar tu negocio, definir estrategia de precios, atracción de clientes y plan de acción personalizado para los próximos 90 días.')">
+          <div class="curso-card-img"><div class="img-ph beauty-2" style="flex-direction:column;gap:8px;cursor:pointer;"><div style="font-size:36px;">💼</div><span style="font-size:9px;opacity:0.6;">imagen asesoría</span></div></div>
+          <div class="curso-card-body">
+            <span class="curso-tag">Asesoría · Negocio</span>
+            <h3>Mentoría de Negocio Beauty 1:1</h3>
+            <p>Estrategia de precios, atracción de clientes y plan de acción para los próximos 90 días.</p>
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-top:12px;">
+              <div class="curso-price">$2,500 MXN</div>
+              <span style="font-size:9px;color:var(--text-muted);letter-spacing:1px;">90 min</span>
+            </div>
+            <button class="btn-gold" style="margin-top:16px;font-size:9px;padding:9px 20px;" onclick="event.stopPropagation();goPage('curso-detalle');setCurso('Mentoría de Negocio Beauty 1:1','Asesoría · Negocio','$2,500 MXN / sesión','90 minutos','Todos los niveles','Sesión individual con Areli Raya para analizar tu negocio, definir estrategia de precios, atracción de clientes y plan de acción personalizado para los próximos 90 días.')">Ver más</button>
+          </div>
+        </div>
+
+        <div class="curso-card" data-cat="tecnica" data-mod="asesorias" onclick="goPage('curso-detalle');setCurso('Retroalimentación Técnica de Maquillaje','Asesoría · Técnica','$1,800 MXN / sesión','60 minutos','Todos los niveles','Envía tus trabajos y recibe retroalimentación detallada y personalizada de una instructora certificada. Identifica áreas de mejora específicas y recibe ejercicios para practicar.')">
+          <div class="curso-card-img"><div class="img-ph beauty-1" style="flex-direction:column;gap:8px;cursor:pointer;"><div style="font-size:36px;">🎨</div><span style="font-size:9px;opacity:0.6;">imagen asesoría</span></div></div>
+          <div class="curso-card-body">
+            <span class="curso-tag">Asesoría · Técnica</span>
+            <h3>Retroalimentación Técnica</h3>
+            <p>Revisión detallada de tus trabajos con identificación de áreas de mejora y ejercicios personalizados.</p>
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-top:12px;">
+              <div class="curso-price">$1,800 MXN</div>
+              <span style="font-size:9px;color:var(--text-muted);letter-spacing:1px;">60 min</span>
+            </div>
+            <button class="btn-gold" style="margin-top:16px;font-size:9px;padding:9px 20px;" onclick="event.stopPropagation();goPage('curso-detalle');setCurso('Retroalimentación Técnica de Maquillaje','Asesoría · Técnica','$1,800 MXN / sesión','60 minutos','Todos los niveles','Envía tus trabajos y recibe retroalimentación detallada y personalizada de una instructora certificada. Identifica áreas de mejora específicas y recibe ejercicios para practicar.')">Ver más</button>
+          </div>
+        </div>
+
+        <div class="curso-card" data-cat="marca" data-mod="asesorias" onclick="goPage('curso-detalle');setCurso('Marca Personal para Profesionales Beauty','Asesoría · Marca Personal','$3,200 MXN / sesión','2 horas','Todos los niveles','Construye tu marca personal como profesional de la belleza. Definición de nicho, identidad visual, estrategia de contenido y posicionamiento en redes sociales para atraer clientes ideales.')">
+          <div class="curso-card-img"><div class="img-ph beauty-3" style="flex-direction:column;gap:8px;cursor:pointer;"><div style="font-size:36px;">⭐</div><span style="font-size:9px;opacity:0.6;">imagen asesoría</span></div></div>
+          <div class="curso-card-body">
+            <span class="curso-tag">Asesoría · Marca Personal</span>
+            <h3>Marca Personal Beauty</h3>
+            <p>Nicho, identidad visual, contenido y posicionamiento en redes para atraer clientes ideales.</p>
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-top:12px;">
+              <div class="curso-price">$3,200 MXN</div>
+              <span style="font-size:9px;color:var(--text-muted);letter-spacing:1px;">2 horas</span>
+            </div>
+            <button class="btn-gold" style="margin-top:16px;font-size:9px;padding:9px 20px;" onclick="event.stopPropagation();goPage('curso-detalle');setCurso('Marca Personal para Profesionales Beauty','Asesoría · Marca Personal','$3,200 MXN / sesión','2 horas','Todos los niveles','Construye tu marca personal como profesional de la belleza. Definición de nicho, identidad visual, estrategia de contenido y posicionamiento en redes sociales para atraer clientes ideales.')">Ver más</button>
+          </div>
+        </div>
+
+        <div class="curso-card" data-cat="imagen" data-mod="asesorias" onclick="goPage('curso-detalle');setCurso('Asesoría de Imagen Personalizada','Asesoría · Imagen','$2,000 MXN / sesión','90 minutos','Todos los niveles','Sesión de imagen personal 1:1: análisis de colorimetría, diagnóstico de estilo, recomendaciones de guardarropa y cómo potenciar tu imagen profesional y personal de manera auténtica.')">
+          <div class="curso-card-img"><div class="img-ph beauty-4" style="flex-direction:column;gap:8px;cursor:pointer;"><div style="font-size:36px;">👗</div><span style="font-size:9px;opacity:0.6;">imagen asesoría</span></div></div>
+          <div class="curso-card-body">
+            <span class="curso-tag">Asesoría · Imagen</span>
+            <h3>Asesoría de Imagen Personalizada</h3>
+            <p>Colorimetría, diagnóstico de estilo y cómo potenciar tu imagen profesional y personal.</p>
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-top:12px;">
+              <div class="curso-price">$2,000 MXN</div>
+              <span style="font-size:9px;color:var(--text-muted);letter-spacing:1px;">90 min</span>
+            </div>
+            <button class="btn-gold" style="margin-top:16px;font-size:9px;padding:9px 20px;" onclick="event.stopPropagation();goPage('curso-detalle');setCurso('Asesoría de Imagen Personalizada','Asesoría · Imagen','$2,000 MXN / sesión','90 minutos','Todos los niveles','Sesión de imagen personal 1:1: análisis de colorimetría, diagnóstico de estilo, recomendaciones de guardarropa y cómo potenciar tu imagen profesional y personal de manera auténtica.')">Ver más</button>
+          </div>
+        </div>
+
+        <div class="curso-card" data-cat="negocio" data-mod="asesorias" onclick="goPage('curso-detalle');setCurso('Pack Mentoría 4 Sesiones','Asesoría · Negocio','$8,500 MXN / pack','4 × 90 min','Todos los niveles','Paquete de 4 sesiones mensuales de mentoría continua. Seguimiento real de tu progreso, ajuste de estrategia y acompañamiento constante para que alcances tus metas en 90 días.')">
+          <div class="curso-card-img"><div class="img-ph beauty-1" style="flex-direction:column;gap:8px;cursor:pointer;"><div style="font-size:36px;">🚀</div><span style="font-size:9px;opacity:0.6;">imagen asesoría</span></div></div>
+          <div class="curso-card-body">
+            <span class="curso-tag">Pack · Mentoría</span>
+            <h3>Pack Mentoría 4 Sesiones</h3>
+            <p>4 sesiones de mentoría continua con seguimiento mensual. El programa de mayor impacto.</p>
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-top:12px;">
+              <div class="curso-price">$8,500 MXN</div>
+              <span style="font-size:9px;color:var(--gold);letter-spacing:1px;">¡Más popular!</span>
+            </div>
+            <button class="btn-gold" style="margin-top:16px;font-size:9px;padding:9px 20px;" onclick="event.stopPropagation();goPage('curso-detalle');setCurso('Pack Mentoría 4 Sesiones','Asesoría · Negocio','$8,500 MXN / pack','4 × 90 min','Todos los niveles','Paquete de 4 sesiones mensuales de mentoría continua. Seguimiento real de tu progreso, ajuste de estrategia y acompañamiento constante para que alcances tus metas en 90 días.')">Ver más</button>
+          </div>
+        </div>
+
+        <div class="curso-card" data-cat="tecnica" data-mod="asesorias" onclick="goPage('curso-detalle');setCurso('Auditoría de Portfolio Profesional','Asesoría · Técnica','$1,500 MXN / sesión','60 minutos','Intermedio','Revisión experta de tu portfolio o feed de Instagram. Recomendaciones de qué mejorar, qué mostrar y cómo presentar tu trabajo para atraer el tipo de clientes que quieres.')">
+          <div class="curso-card-img"><div class="img-ph beauty-2" style="flex-direction:column;gap:8px;cursor:pointer;"><div style="font-size:36px;">📋</div><span style="font-size:9px;opacity:0.6;">imagen asesoría</span></div></div>
+          <div class="curso-card-body">
+            <span class="curso-tag">Asesoría · Técnica</span>
+            <h3>Auditoría de Portfolio</h3>
+            <p>Revisión experta de tu portfolio e Instagram. Qué mejorar y cómo atraer clientes ideales.</p>
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-top:12px;">
+              <div class="curso-price">$1,500 MXN</div>
+              <span style="font-size:9px;color:var(--text-muted);letter-spacing:1px;">60 min</span>
+            </div>
+            <button class="btn-gold" style="margin-top:16px;font-size:9px;padding:9px 20px;" onclick="event.stopPropagation();goPage('curso-detalle');setCurso('Auditoría de Portfolio Profesional','Asesoría · Técnica','$1,500 MXN / sesión','60 minutos','Intermedio','Revisión experta de tu portfolio o feed de Instagram. Recomendaciones de qué mejorar, qué mostrar y cómo presentar tu trabajo para atraer el tipo de clientes que quieres.')">Ver más</button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- MÉTODO DE PAGO -->
+  <section style="background:var(--oxford-dark);padding:70px 0;">
+    <div class="container">
+      <h2 style="font-family:'Cormorant Garamond',serif;font-size:clamp(24px,3vw,40px);color:var(--white);font-weight:300;text-align:center;margin-bottom:52px;">Método de Pago</h2>
+      <div class="metodo-steps">
+        <div class="metodo-step"><div class="step-num">01</div><h4>Elige tu asesoría</h4><p>Selecciona el tipo de sesión según tus objetivos: técnica, negocio, imagen o pack mensual.</p></div>
+        <div class="metodo-step"><div class="step-num">02</div><h4>Agenda tu sesión</h4><p>Escríbenos por WhatsApp con tu nombre y tipo de asesoría. Te confirmamos fecha y horario disponible.</p></div>
+        <div class="metodo-step"><div class="step-num">03</div><h4>Realiza tu pago</h4><p>Pago 100% anticipado para confirmar tu sesión. Tarjeta, transferencia o depósito bancario.</p></div>
+        <div class="metodo-step"><div class="step-num">04</div><h4>¡Lista para tu sesión!</h4><p>Recibes el link de videollamada o confirmación de lugar en nuestro estudio. ¡Solo llega con tus ganas!</p></div>
+      </div>
+      <div style="text-align:center;margin-top:48px;">
+        <a href="https://wa.me/521234567890" target="_blank" class="btn-gold-filled">Agendar por WhatsApp</a>
+      </div>
+    </div>
+  </section>
+
+</div>
+</div>
+
+<!-- ======== PÁGINA DETALLE DE CURSO ======== -->
+<div class="page" id="page-curso-detalle">
+<div class="page-content">
+  <section style="background:var(--oxford-dark);padding:80px 0 0;">
+    <div class="container">
+      <button class="btn-gold" onclick="goPage(window._lastAcademiaPage||'academia')" style="margin-bottom:40px;font-size:9px;padding:9px 20px;">← Volver</button>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:64px;align-items:start;padding-bottom:80px;">
+        <div>
+          <div style="width:100%;padding-top:75%;position:relative;overflow:hidden;" id="curso-img-wrap">
+            <div class="img-ph beauty-1" id="curso-img-ph" style="position:absolute;inset:0;flex-direction:column;gap:16px;">
+              <div style="font-size:64px;" id="curso-img-icon">✨</div>
+              <span style="font-size:10px;opacity:0.5;">imagen del curso</span>
+            </div>
+          </div>
+        </div>
+        <div>
+          <span class="about-tag" id="curso-modalidad">Online · Maquillaje</span>
+          <h1 style="font-family:'Cormorant Garamond',serif;font-size:clamp(28px,3.5vw,48px);font-weight:300;color:var(--white);margin-bottom:8px;" id="curso-nombre">Nombre del Curso</h1>
+          <div class="gold-line"></div>
+          <div style="display:flex;gap:24px;margin:20px 0 28px;flex-wrap:wrap;">
+            <div style="display:flex;align-items:center;gap:8px;"><span style="font-size:9px;letter-spacing:2px;color:var(--gold);">DURACIÓN</span><span style="font-size:11px;color:rgba(255,255,255,0.7);" id="curso-duracion">—</span></div>
+            <div style="display:flex;align-items:center;gap:8px;"><span style="font-size:9px;letter-spacing:2px;color:var(--gold);">NIVEL</span><span style="font-size:11px;color:rgba(255,255,255,0.7);" id="curso-nivel">—</span></div>
+          </div>
+          <p style="font-size:12px;line-height:2;color:var(--text-muted);margin-bottom:32px;letter-spacing:0.5px;" id="curso-desc">Descripción del curso.</p>
+          <div style="display:flex;align-items:center;gap:24px;flex-wrap:wrap;">
+            <div style="font-family:'Cormorant Garamond',serif;font-size:38px;color:var(--gold);font-weight:300;" id="curso-precio">$0 MXN</div>
+            <a href="https://wa.me/521234567890" target="_blank" class="btn-gold-filled">Inscribirme ahora</a>
+          </div>
+          <div style="margin-top:36px;padding:24px;border:1px solid var(--border);background:rgba(201,168,76,0.04);">
+            <h4 style="font-family:'Cormorant Garamond',serif;font-size:18px;color:var(--gold);font-weight:400;margin-bottom:16px;">Incluye</h4>
+            <ul style="list-style:none;display:flex;flex-direction:column;gap:10px;">
+              <li style="font-size:11px;color:rgba(255,255,255,0.6);letter-spacing:0.5px;">✓ &nbsp;Acceso de por vida al contenido</li>
+              <li style="font-size:11px;color:rgba(255,255,255,0.6);letter-spacing:0.5px;">✓ &nbsp;Certificado digital y físico</li>
+              <li style="font-size:11px;color:rgba(255,255,255,0.6);letter-spacing:0.5px;">✓ &nbsp;Soporte de instructora vía comunidad</li>
+              <li style="font-size:11px;color:rgba(255,255,255,0.6);letter-spacing:0.5px;">✓ &nbsp;Material descargable en PDF</li>
+              <li style="font-size:11px;color:rgba(255,255,255,0.6);letter-spacing:0.5px;">✓ &nbsp;Acceso a comunidad privada de alumni</li>
+            </ul>
+          </div>
+        </div>
       </div>
     </div>
   </section>
@@ -1405,7 +2090,7 @@ section { padding:80px 0; }
         <h5>Contáctanos</h5>
         <ul>
           <li><a href="tel:+521234567890">+52 123 456 7890</a></li>
-          <li><a href="mailto:hola@metabeauty.mx">hola@metabeauty.mx</a></li>
+          <li><a href="/cdn-cgi/l/email-protection#335b5c5f52735e56475251565246474a1d5e4b"><span class="__cf_email__" data-cfemail="d9b1b6b5b899b4bcadb8bbbcb8acada0f7b4a1">[email&#160;protected]</span></a></li>
           <li><a href="#">Col. Polanco, CDMX</a></li>
           <li><a href="https://wa.me/521234567890" target="_blank">WhatsApp</a></li>
         </ul>
@@ -1429,35 +2114,200 @@ section { padding:80px 0; }
   </div>
 </footer>
 
-<script>
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
 // ======== NAVIGATION ========
 function goPage(name) {
-  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  // Track last academia subpage for "Volver" button
+  var academiaSubPages = ['academia-online','academia-presencial','academia-asesorias'];
+  if (academiaSubPages.indexOf(name) === -1) {
+    // Reset search banner and card visibility when leaving any listing page
+    resetSearchBanner && resetSearchBanner();
+  }
+  if (academiaSubPages.indexOf(window._currentPage||'') > -1 && name === 'curso-detalle') {
+    window._lastAcademiaPage = window._currentPage;
+  }
+  window._currentPage = name;
+
+  document.querySelectorAll('.page').forEach(function(p){ p.classList.remove('active'); });
   var pg = document.getElementById('page-' + name);
   if (pg) { pg.classList.add('active'); window.scrollTo(0,0); }
 
+  // Nav active state — academia subpages highlight "Academia"
+  var navName = name.startsWith('academia') ? 'academia' : name;
   document.querySelectorAll('.nav-links a').forEach(function(a) {
-    a.classList.toggle('active', a.dataset.page === name);
+    a.classList.toggle('active', a.dataset.page === navName);
   });
 
-  var srchPages = ['academia','servicios','blog'];
   var ns = document.getElementById('navSearch');
   var sl = document.getElementById('searchLabel');
-  var labels = { academia:'Busca tu curso', servicios:'Busca tu servicio', blog:'Busca tu blog' };
-  if (srchPages.indexOf(name) > -1) {
+
+  // Search bar configuration per page
+  var searchConfig = {
+    'academia':            { show: true, label: 'Busca tu curso',           scope: 'all' },
+    'academia-online':     { show: true, label: 'Busca tu curso online',     scope: 'online' },
+    'academia-presencial': { show: true, label: 'Busca tu curso presencial', scope: 'presencial' },
+    'academia-asesorias':  { show: true, label: 'Busca tu asesoría',         scope: 'asesorias' },
+    'servicios':           { show: true, label: 'Busca tu servicio',         scope: 'servicios' },
+    'blog':                { show: true, label: 'Busca tu blog',             scope: 'blog' }
+  };
+
+  var cfg = searchConfig[name];
+  if (cfg && cfg.show) {
     ns.classList.add('visible');
-    sl.textContent = labels[name] || '';
+    sl.textContent = cfg.label;
+    ns.dataset.scope = cfg.scope;
   } else {
     ns.classList.remove('visible');
+    ns.dataset.scope = '';
   }
+  document.getElementById('searchInput').value = '';
   document.getElementById('navLinks').classList.remove('open');
+}
+
+// ======== ACCENT-INSENSITIVE NORMALIZER ========
+function normalize(str) {
+  return str.toLowerCase()
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, ''); // strip diacritics
+}
+
+// ======== SMART SEARCH ========
+function doSearch() {
+  var raw = document.getElementById('searchInput').value.trim();
+  var q = normalize(raw);
+  var scope = document.getElementById('navSearch').dataset.scope || 'all';
+  if (!q) return;
+
+  var selectors = {
+    'all':        '#grid-online .curso-card, #grid-presencial .curso-card, #grid-asesorias .curso-card',
+    'online':     '#grid-online .curso-card',
+    'presencial': '#grid-presencial .curso-card',
+    'asesorias':  '#grid-asesorias .curso-card',
+    'servicios':  '.servicio-card',
+    'blog':       '.blog-card'
+  };
+  var sel = selectors[scope] || selectors['all'];
+
+  var pageMap = {
+    'all':        'academia',
+    'online':     'academia-online',
+    'presencial': 'academia-presencial',
+    'asesorias':  'academia-asesorias',
+    'servicios':  'servicios',
+    'blog':       'blog'
+  };
+
+  // For 'all' scope (academia main page), render results inline in the page
+  if (scope === 'all') {
+    // Collect all course data from all 3 grids
+    var allCards = document.querySelectorAll('#grid-online .curso-card, #grid-presencial .curso-card, #grid-asesorias .curso-card');
+    var matched = [];
+    allCards.forEach(function(c) {
+      var text = normalize(c.innerText);
+      if (text.includes(q)) matched.push(c);
+    });
+
+    var panel = document.getElementById('academia-search-results');
+    var grid  = document.getElementById('academia-results-grid');
+    var noRes = document.getElementById('academia-no-results');
+    var title = document.getElementById('search-results-title');
+
+    // Clear previous results
+    grid.innerHTML = '';
+    noRes.style.display = 'none';
+    grid.style.display = '';
+
+    if (matched.length > 0) {
+      title.textContent = matched.length + ' resultado' + (matched.length > 1 ? 's' : '') + ' para "' + raw + '"';
+      matched.forEach(function(c) {
+        var clone = c.cloneNode(true);
+        // Rewire all onclick on clone to work correctly
+        clone.querySelectorAll('[onclick]').forEach(function(el) {
+          var oc = el.getAttribute('onclick');
+          el.setAttribute('onclick', oc);
+        });
+        grid.appendChild(clone);
+      });
+    } else {
+      grid.style.display = 'none';
+      noRes.style.display = 'block';
+      document.getElementById('academia-no-results-text').textContent = 'No encontramos cursos para "' + raw + '". Intenta con otras palabras.';
+      title.textContent = 'Sin resultados para "' + raw + '"';
+    }
+
+    panel.style.display = 'block';
+    // Scroll to results
+    setTimeout(function(){
+      panel.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }, 80);
+    return;
+  }
+
+  // For specific scope pages, navigate then filter
+  goPage(pageMap[scope] || 'academia');
+  setTimeout(function() {
+    var cards = document.querySelectorAll(sel);
+    var found = 0;
+    cards.forEach(function(c) {
+      var text = normalize(c.innerText);
+      var match = text.includes(q);
+      c.style.display = match ? '' : 'none';
+      if (match) found++;
+    });
+    if (found === 0) {
+      cards.forEach(function(c){ c.style.display = ''; });
+      alert('Sin resultados para "' + raw + '".');
+    }
+  }, 120);
+}
+
+document.getElementById('searchInput').addEventListener('keypress', function(e){
+  if (e.key === 'Enter') doSearch();
+});
+
+// Reset search results when navigating away
+function resetSearchBanner() {
+  var panel = document.getElementById('academia-search-results');
+  if (panel) panel.style.display = 'none';
+  var grid = document.getElementById('academia-results-grid');
+  if (grid) grid.innerHTML = '';
+  // Reset card visibility on subpages
+  document.querySelectorAll('.curso-card,.blog-card,.servicio-card').forEach(function(c){ c.style.display = ''; });
+}
+
+// Clear search and hide results panel
+function clearAcademiaSearch() {
+  var panel = document.getElementById('academia-search-results');
+  if (panel) panel.style.display = 'none';
+  var grid = document.getElementById('academia-results-grid');
+  if (grid) grid.innerHTML = '';
+  document.getElementById('searchInput').value = '';
+  // Scroll back to top of academia page
+  document.getElementById('modalidades').scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+// ======== setCurso — populate course detail page ========
+// Tracks which subpage the user came from so Volver works correctly
+window._lastAcademiaPage = 'academia';
+
+function setCurso(nombre, modalidad, precio, duracion, nivel, desc, fromPage) {
+  if (fromPage) window._lastAcademiaPage = fromPage;
+  document.getElementById('curso-nombre').textContent = nombre;
+  document.getElementById('curso-modalidad').textContent = modalidad;
+  document.getElementById('curso-precio').textContent = precio;
+  document.getElementById('curso-duracion').textContent = duracion;
+  document.getElementById('curso-nivel').textContent = nivel;
+  document.getElementById('curso-desc').textContent = desc;
+  var icons = { maquillaje:'💄', cabello:'💇', imagen:'✨', piel:'🌿', negocio:'💼', asesor:'🎯', pack:'🚀', portfolio:'📋', novia:'👰', arte:'🎭', color:'🎨', editorial:'📸', contouring:'🎨', integral:'🌟', auditoria:'📋' };
+  var icon = '✨';
+  var n = normalize(nombre + modalidad);
+  Object.keys(icons).forEach(function(k){ if(n.includes(normalize(k))) icon = icons[k]; });
+  document.getElementById('curso-img-icon').textContent = icon;
 }
 
 function toggleMenu() {
   document.getElementById('navLinks').classList.toggle('open');
 }
-
-// ======== HERO CAROUSEL ========
 var heroIdx = 0;
 var heroTotal = 4;
 function heroMove(dir) { heroIdx = (heroIdx + dir + heroTotal) % heroTotal; heroApply(); }
@@ -1500,17 +2350,226 @@ function filterBlog(cat, btn) {
   });
 }
 
-// ======== FAQ ========
-function toggleFaq(item) { item.classList.toggle('open'); }
+// ======== CURSO FILTER (per subpage) ========
+function filterCursos(grid, cat, btn) {
+  // Reset active on ALL filter buttons in the same filter bar as the clicked button
+  var filterBar = btn.parentElement;
+  filterBar.querySelectorAll('.blog-filter').forEach(function(b){ b.classList.remove('active'); });
+  btn.classList.add('active');
 
-// ======== SEARCH ========
-function doSearch() {
-  var q = document.getElementById('searchInput').value.trim();
-  if (q) alert('Buscando: "' + q + '"');
+  // Filter the cards in the target grid
+  var container = document.getElementById('grid-' + grid);
+  if (!container) return;
+  container.querySelectorAll('.curso-card').forEach(function(c){
+    c.style.display = (cat === 'todos' || c.dataset.cat === cat) ? '' : 'none';
+  });
 }
-document.getElementById('searchInput').addEventListener('keypress', function(e){
-  if (e.key === 'Enter') doSearch();
-});
+
+// ======== BLOG DATA & DETAIL ========
+var BLOGS = [
+  {
+    id: 0,
+    titulo: '5 técnicas de contouring que debes dominar en 2025',
+    categoria: 'Maquillaje',
+    fecha: '12 de marzo, 2025',
+    icon: '💄',
+    imgClass: 'beauty-1',
+    contenido: `
+      <p>El contouring ya no es lo que era hace cinco años. Las técnicas evolucionaron, los productos mejoraron y los maquillistas profesionales hoy trabajan de una forma mucho más natural y precisa. Si quieres mantenerte al día en la industria, estas son las 5 técnicas que necesitas dominar.</p>
+
+      <h3 style="font-family:'Cormorant Garamond',serif;font-size:26px;color:var(--oxford-dark);font-weight:400;margin:36px 0 16px;">1. Soft Contour con cremas</h3>
+      <p>Olvídate de los polvos pesados. El contouring con fórmulas cremosas da un acabado mucho más natural y foto-real. Aplica en las zonas de sombra con un pincel plano y difumina hacia afuera con un pincel de cerdas suaves. El resultado es un efecto esculpido que parece real, no maquillado.</p>
+
+      <h3 style="font-family:'Cormorant Garamond',serif;font-size:26px;color:var(--oxford-dark);font-weight:400;margin:36px 0 16px;">2. Contouring adaptado a la morfología</h3>
+      <p>No existe un contouring universal. Cada rostro necesita una técnica diferente. Para rostros ovalados, el contouring es mínimo. Para rostros redondos, se trabaja más en sienes y mandíbula. Para rostros largos, se esculpe horizontal. Aprende a diagnosticar primero, aplicar después.</p>
+
+      <h3 style="font-family:'Cormorant Garamond',serif;font-size:26px;color:var(--oxford-dark);font-weight:400;margin:36px 0 16px;">3. Contouring nasal de precisión</h3>
+      <p>El nose contouring pasó de ser una técnica dramática a convertirse en un ajuste sutil que transforma la percepción del rostro. La clave está en usar productos con poca pigmentación y difuminar muy bien los bordes. Un pincel de punta fina es tu mejor aliado aquí.</p>
+
+      <h3 style="font-family:'Cormorant Garamond',serif;font-size:26px;color:var(--oxford-dark);font-weight:400;margin:36px 0 16px;">4. Strobing integrado</h3>
+      <p>El contouring no puede ir solo: necesita su contraparte de luz. El strobing integrado significa aplicar el iluminador en los puntos exactos donde la luz naturalmente impacta el rostro: arco del pómulo, puente nasal, arco de Cupido y centro de la frente. Nada de brillo en exceso, solo precisión.</p>
+
+      <h3 style="font-family:'Cormorant Garamond',serif;font-size:26px;color:var(--oxford-dark);font-weight:400;margin:36px 0 16px;">5. Contouring de larga duración para eventos</h3>
+      <p>Para bodas, sesiones fotográficas y eventos de largo aliento, la clave es trabajar en capas: base cremosa, polvo de fijación, contorno en polvo y spray fijador final. Esta combinación garantiza que el maquillaje dure horas sin necesidad de retoques.</p>
+
+      <div style="background:var(--oxford-dark);padding:28px 32px;margin:40px 0;border-left:3px solid var(--gold);">
+        <p style="color:rgba(255,255,255,0.8);font-style:italic;font-family:'Cormorant Garamond',serif;font-size:18px;line-height:1.8;margin:0;">"El mejor contouring es el que nadie nota, pero todos sienten."</p>
+        <span style="font-size:10px;color:var(--gold);letter-spacing:2px;display:block;margin-top:12px;">— Areli Raya</span>
+      </div>
+
+      <p>¿Quieres aprender estas técnicas de forma práctica? En Metabeauty Academia tenemos cursos de maquillaje profesional donde trabajamos todo esto con modelos reales y feedback personalizado.</p>
+    `
+  },
+  {
+    id: 1,
+    titulo: 'Cómo fijar precios justos para tus servicios de belleza',
+    categoria: 'Negocio',
+    fecha: '5 de marzo, 2025',
+    icon: '📊',
+    imgClass: 'beauty-2',
+    contenido: `
+      <p>Fijar precios es uno de los retos más grandes para los profesionales de la belleza. Cobrar muy poco agota, cobrar de más aleja clientes. La solución no es adivinar, sino calcular con una fórmula clara.</p>
+
+      <h3 style="font-family:'Cormorant Garamond',serif;font-size:26px;color:var(--oxford-dark);font-weight:400;margin:36px 0 16px;">Paso 1: Calcula tus costos reales</h3>
+      <p>Antes de fijar un precio, necesitas saber cuánto te cuesta dar el servicio. Incluye: costo de productos utilizados, renta del espacio (proporcional por hora), servicios como agua, luz y wifi, gastos de marketing y tiempo de traslado. Muchas profesionales cobran solo por el tiempo frente al cliente y olvidan todos estos rubros.</p>
+
+      <h3 style="font-family:'Cormorant Garamond',serif;font-size:26px;color:var(--oxford-dark);font-weight:400;margin:36px 0 16px;">Paso 2: Define cuánto quieres ganar</h3>
+      <p>Decide cuál es el ingreso mensual que necesitas (no quieres, necesitas). Divide entre los días que trabajas y las horas por día. Eso te da tu tarifa mínima por hora. A partir de ahí, asigna un valor real a cada servicio según el tiempo que toma.</p>
+
+      <h3 style="font-family:'Cormorant Garamond',serif;font-size:26px;color:var(--oxford-dark);font-weight:400;margin:36px 0 16px;">Paso 3: Investiga el mercado</h3>
+      <p>Conoce qué cobran otras profesionales en tu zona y con tu nivel de experiencia. No copies sus precios, úsalos como referencia. Si tienes más experiencia, más certificaciones o un nicho más específico, puedes y debes cobrar más.</p>
+
+      <h3 style="font-family:'Cormorant Garamond',serif;font-size:26px;color:var(--oxford-dark);font-weight:400;margin:36px 0 16px;">Paso 4: Suma el valor percibido</h3>
+      <p>El precio no solo refleja el costo, refleja el valor. Si tu atención es excepcional, tu espacio es bonito y tu resultado es consistente, eso tiene un valor extra que puedes cobrar. El posicionamiento importa tanto como la calidad.</p>
+
+      <div style="background:var(--oxford-dark);padding:28px 32px;margin:40px 0;border-left:3px solid var(--gold);">
+        <p style="color:rgba(255,255,255,0.8);font-style:italic;font-family:'Cormorant Garamond',serif;font-size:18px;line-height:1.8;margin:0;">"Subir precios no te hace cara. Te hace profesional."</p>
+        <span style="font-size:10px;color:var(--gold);letter-spacing:2px;display:block;margin-top:12px;">— Areli Raya</span>
+      </div>
+
+      <p>Si quieres profundizar en este tema, en nuestro curso <strong>Emprende tu Negocio Beauty</strong> cubrimos estrategias de precios, posicionamiento y cómo comunicar tu valor a clientes. Revísalo en la sección Academia.</p>
+    `
+  },
+  {
+    id: 2,
+    titulo: 'Tendencias de coloración para primavera-verano 2025',
+    categoria: 'Peinado',
+    fecha: '28 de febrero, 2025',
+    icon: '💇',
+    imgClass: 'beauty-3',
+    contenido: `
+      <p>La temporada primavera-verano 2025 trae colores que celebran la luz, la naturaleza y la autenticidad. Si trabajas con cabello o simplemente quieres renovar tu look, aquí te contamos qué se viene.</p>
+
+      <h3 style="font-family:'Cormorant Garamond',serif;font-size:26px;color:var(--oxford-dark);font-weight:400;margin:36px 0 16px;">Balayage butter blonde</h3>
+      <p>El clásico balayage se reinventa con tonos más cálidos y cremosos. El "butter blonde" es un rubio dorado con reflejos mantequilla que luce increíblemente natural con cualquier tono de piel. La clave está en la transición suave desde las raíces oscuras.</p>
+
+      <h3 style="font-family:'Cormorant Garamond',serif;font-size:26px;color:var(--oxford-dark);font-weight:400;margin:36px 0 16px;">Coppery brunette</h3>
+      <p>El castaño cobrizoestá en su mejor momento. Tonos rojizos cálidos que dan vida al cabello oscuro sin decoloración agresiva. Funciona especialmente bien en pieles morenas y resulta muy fácil de mantener.</p>
+
+      <h3 style="font-family:'Cormorant Garamond',serif;font-size:26px;color:var(--oxford-dark);font-weight:400;margin:36px 0 16px;">Money pieces más pronunciados</h3>
+      <p>Los money pieces (iluminación alrededor del rostro) siguen fuertes pero con más contraste. Ya no son sutil: son visibles, atrevidos y enmarcan el rostro de forma dramática. Se llevan bien definidos y sin difuminar demasiado.</p>
+
+      <h3 style="font-family:'Cormorant Garamond',serif;font-size:26px;color:var(--oxford-dark);font-weight:400;margin:36px 0 16px;">Gris plata con efecto espejo</h3>
+      <p>Para las más atrevidas, el gris plateado con acabado espejo llega con fuerza. Requiere decoloración total y un tóner muy específico, pero el resultado es impresionante. Es tendencia en pasarelas y en las cuentas de coloristas de todo el mundo.</p>
+
+      <div style="background:var(--oxford-dark);padding:28px 32px;margin:40px 0;border-left:3px solid var(--gold);">
+        <p style="color:rgba(255,255,255,0.8);font-style:italic;font-family:'Cormorant Garamond',serif;font-size:18px;line-height:1.8;margin:0;">"El cabello es el accesorio más versátil que existe. Úsalo con intención."</p>
+        <span style="font-size:10px;color:var(--gold);letter-spacing:2px;display:block;margin-top:12px;">— Areli Raya</span>
+      </div>
+    `
+  },
+  {
+    id: 3,
+    titulo: 'Rutina skincare en 5 pasos para pieles mixtas',
+    categoria: 'Cuidado de piel',
+    fecha: '20 de febrero, 2025',
+    icon: '🌿',
+    imgClass: 'beauty-4',
+    contenido: `
+      <p>La piel mixta es una de las más comunes y también una de las más malentendidas. Muchas personas usan productos para piel grasa en toda la cara y terminan con zonas secas e irritadas. Esta rutina de 5 pasos está diseñada específicamente para este tipo de piel.</p>
+
+      <h3 style="font-family:'Cormorant Garamond',serif;font-size:26px;color:var(--oxford-dark);font-weight:400;margin:36px 0 16px;">Paso 1: Limpieza con gel suave (mañana y noche)</h3>
+      <p>Usa un limpiador en gel de pH neutro que quite el exceso de sebo sin resecar las mejillas. Aplica con movimientos circulares suaves y enjuaga con agua tibia, nunca caliente. Por las noches, si usaste maquillaje, empieza con un aceite desmaquillante antes del gel.</p>
+
+      <h3 style="font-family:'Cormorant Garamond',serif;font-size:26px;color:var(--oxford-dark);font-weight:400;margin:36px 0 16px;">Paso 2: Tónico equilibrante</h3>
+      <p>Los tónicos con ácido glicólico al 5% o niacinamida ayudan a equilibrar la producción de sebo en la zona T sin afectar las zonas secas. Aplica con bolita de algodón o con las manos, de forma suave, en todo el rostro.</p>
+
+      <h3 style="font-family:'Cormorant Garamond',serif;font-size:26px;color:var(--oxford-dark);font-weight:400;margin:36px 0 16px;">Paso 3: Sérum con niacinamida</h3>
+      <p>La niacinamida al 10% es el ingrediente estrella para pieles mixtas. Regula el sebo, minimiza poros, uniforma el tono y fortalece la barrera cutánea. Aplica 3-4 gotas en todo el rostro antes de la hidratante.</p>
+
+      <h3 style="font-family:'Cormorant Garamond',serif;font-size:26px;color:var(--oxford-dark);font-weight:400;margin:36px 0 16px;">Paso 4: Hidratante ligera</h3>
+      <p>Opta por una hidratante en gel o gel-crema que hidrate sin dar brillo. Las fórmulas con ácido hialurónico son ideales: hidratan profundo sin obstruir poros. Aplica en todo el rostro, incluida la zona T.</p>
+
+      <h3 style="font-family:'Cormorant Garamond',serif;font-size:26px;color:var(--oxford-dark);font-weight:400;margin:36px 0 16px;">Paso 5: Protector solar (solo en la mañana)</h3>
+      <p>El SPF es innegociable, incluso en días nublados. Busca uno de acabado matte o satinado si te preocupa el brillo. Aplica como último paso antes del maquillaje y reaplicatodos los días sin excepción.</p>
+
+      <div style="background:var(--oxford-dark);padding:28px 32px;margin:40px 0;border-left:3px solid var(--gold);">
+        <p style="color:rgba(255,255,255,0.8);font-style:italic;font-family:'Cormorant Garamond',serif;font-size:18px;line-height:1.8;margin:0;">"La piel sana es la base de cualquier maquillaje excepcional."</p>
+        <span style="font-size:10px;color:var(--gold);letter-spacing:2px;display:block;margin-top:12px;">— Areli Raya</span>
+      </div>
+    `
+  },
+  {
+    id: 4,
+    titulo: 'El maquillaje "no makeup" que arrasa en redes en 2025',
+    categoria: 'Tendencias',
+    fecha: '14 de febrero, 2025',
+    icon: '✨',
+    imgClass: 'beauty-1',
+    contenido: `
+      <p>El maquillaje "no makeup" o "your skin but better" es la tendencia más buscada en 2025. La idea es simple: lucir como si no trajeras nada puesto, pero con una piel perfecta, luminosa y unificada. Aquí te enseñamos cómo lograrlo.</p>
+
+      <h3 style="font-family:'Cormorant Garamond',serif;font-size:26px;color:var(--oxford-dark);font-weight:400;margin:36px 0 16px;">La base: skincare primero</h3>
+      <p>Este look empieza antes del maquillaje. Una rutina de skincare completa la noche anterior y una hidratante bien absorbida en la mañana marcan la diferencia. La piel necesita estar lista para recibir el maquillaje sin que lo absorba.</p>
+
+      <h3 style="font-family:'Cormorant Garamond',serif;font-size:26px;color:var(--oxford-dark);font-weight:400;margin:36px 0 16px;">Skin tint o BB cream en lugar de base</h3>
+      <p>Olvídate de la base de cobertura completa. Para este look usamos skin tints o BB creams de cobertura muy ligera que unifican el tono sin tapar la piel. Aplica con los dedos para un acabado más natural y difumina muy bien en bordes.</p>
+
+      <h3 style="font-family:'Cormorant Garamond',serif;font-size:26px;color:var(--oxford-dark);font-weight:400;margin:36px 0 16px;">Corrector solo donde se necesita</h3>
+      <p>Cubre solo lo que realmente necesitas: ojeras pronunciadas, granitos activos o manchas muy visibles. Usa un corrector cremoso de tono exacto y difumina perfectamente para que no haya líneas visibles.</p>
+
+      <h3 style="font-family:'Cormorant Garamond',serif;font-size:26px;color:var(--oxford-dark);font-weight:400;margin:36px 0 16px;">Blush cremoso natural</h3>
+      <p>El blush es la clave de este look. Usa un rubor en crema de tono melocotón o rosado suave y aplica con los dedos en las mejillas, difuminando hacia las sienes. Debe verse como si fuera el color natural de tu piel cuando haces ejercicio.</p>
+
+      <h3 style="font-family:'Cormorant Garamond',serif;font-size:26px;color:var(--oxford-dark);font-weight:400;margin:36px 0 16px;">Brillo y mascara, nada más</h3>
+      <p>Para terminar: un gloss transparente o rosado muy suave en los labios y una capa de mascara en las pestañas superiores. Sin delineador, sin sombras, sin contornos. Solo lo esencial para definir sin dramatizar.</p>
+
+      <div style="background:var(--oxford-dark);padding:28px 32px;margin:40px 0;border-left:3px solid var(--gold);">
+        <p style="color:rgba(255,255,255,0.8);font-style:italic;font-family:'Cormorant Garamond',serif;font-size:18px;line-height:1.8;margin:0;">"El mejor maquillaje es el que hace que todos se pregunten si llevas."</p>
+        <span style="font-size:10px;color:var(--gold);letter-spacing:2px;display:block;margin-top:12px;">— Areli Raya</span>
+      </div>
+    `
+  },
+  {
+    id: 5,
+    titulo: 'Instagram para profesionales de la belleza: guía 2025',
+    categoria: 'Negocio',
+    fecha: '7 de febrero, 2025',
+    icon: '📱',
+    imgClass: 'beauty-2',
+    contenido: `
+      <p>Instagram sigue siendo la red más importante para los profesionales de la belleza, pero el algoritmo y los hábitos de los usuarios cambiaron radicalmente. Esta es la estrategia que funciona hoy.</p>
+
+      <h3 style="font-family:'Cormorant Garamond',serif;font-size:26px;color:var(--oxford-dark);font-weight:400;margin:36px 0 16px;">Reels cortos con valor real</h3>
+      <p>Los reels de 15 a 30 segundos tienen el mayor alcance orgánico. La clave es que aporten algo en los primeros 3 segundos: un tip rápido, una transformación sorprendente o una técnica específica. El entretenimiento y la educación son los formatos que más se comparten.</p>
+
+      <h3 style="font-family:'Cormorant Garamond',serif;font-size:26px;color:var(--oxford-dark);font-weight:400;margin:36px 0 16px;">Antes y después bien ejecutados</h3>
+      <p>Los contenidos de transformación siguen siendo los más guardados. Asegúrate de que la foto de "antes" tenga buena iluminación (no la hagas ver mal a propósito) y que el "después" muestre el resultado en toda su gloria. La honestidad construye más confianza que la exageración.</p>
+
+      <h3 style="font-family:'Cormorant Garamond',serif;font-size:26px;color:var(--oxford-dark);font-weight:400;margin:36px 0 16px;">Stories para conectar, feed para posicionarte</h3>
+      <p>Usa las Stories para mostrar tu día a día, humanizar tu marca y generar conversación. Usa el feed para mostrar tu trabajo en su mejor versión. Esta separación le da coherencia a tu perfil y crea dos tipos de vínculos distintos con tu audiencia.</p>
+
+      <h3 style="font-family:'Cormorant Garamond',serif;font-size:26px;color:var(--oxford-dark);font-weight:400;margin:36px 0 16px;">Responde a TODOS los comentarios en las primeras horas</h3>
+      <p>El algoritmo premia el engagement temprano. Cuando publiques, quédate los primeros 30-60 minutos respondiendo comentarios. Esto dispara el alcance de tu publicación de forma significativa. No es opcional, es parte de la estrategia.</p>
+
+      <h3 style="font-family:'Cormorant Garamond',serif;font-size:26px;color:var(--oxford-dark);font-weight:400;margin:36px 0 16px;">Consistencia sobre cantidad</h3>
+      <p>Publicar todos los días sin estrategia no funciona. Es mejor publicar 3 veces por semana con contenido de valor que publicar todos los días contenido vacío. Define tus pilares de contenido, planifica con una semana de anticipación y mantén la frecuencia.</p>
+
+      <div style="background:var(--oxford-dark);padding:28px 32px;margin:40px 0;border-left:3px solid var(--gold);">
+        <p style="color:rgba(255,255,255,0.8);font-style:italic;font-family:'Cormorant Garamond',serif;font-size:18px;line-height:1.8;margin:0;">"Tu Instagram es tu portafolio abierto al mundo. Cuídalo como tu mejor herramienta de trabajo."</p>
+        <span style="font-size:10px;color:var(--gold);letter-spacing:2px;display:block;margin-top:12px;">— Areli Raya</span>
+      </div>
+
+      <p>Si quieres una estrategia de Instagram diseñada específicamente para tu negocio, en Metabeauty ofrecemos asesorías de marca y redes sociales personalizadas. Visita la sección de Asesorías para conocer más.</p>
+    `
+  }
+];
+
+function openBlog(idx) {
+  var b = BLOGS[idx];
+  if (!b) return;
+  document.getElementById('blog-det-title').textContent = b.titulo;
+  document.getElementById('blog-det-cat').textContent = b.categoria;
+  document.getElementById('blog-det-date').textContent = b.fecha;
+  document.getElementById('blog-det-icon').textContent = b.icon;
+  document.getElementById('blog-det-content').innerHTML = b.contenido;
+  // Update image background class
+  var imgInner = document.getElementById('blog-det-img-inner');
+  imgInner.className = 'img-ph ' + b.imgClass;
+  imgInner.style.cssText = 'position:absolute;inset:0;flex-direction:column;gap:16px;';
+  goPage('blog-detalle');
+}
+
 </script>
 </body>
 </html>

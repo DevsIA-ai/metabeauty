@@ -1,0 +1,1516 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Metabeauty</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Josefin+Sans:wght@200;300;400;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --oxford: #2c3040;
+  --oxford-dark: #1a1e2a;
+  --oxford-light: #3d4356;
+  --gold: #c9a84c;
+  --gold-light: #e4c97e;
+  --gold-pale: #f5e8c4;
+  --cream: #faf8f4;
+  --white: #ffffff;
+  --text-muted: #8a8d99;
+  --border: rgba(201,168,76,0.2);
+  --shadow: 0 8px 40px rgba(44,48,64,0.15);
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+html { scroll-behavior:smooth; }
+body { font-family:'Josefin Sans',sans-serif; background:var(--cream); color:var(--oxford); overflow-x:hidden; }
+
+.page { display:none; }
+.page.active { display:block; }
+h1,h2,h3,h4 { font-family:'Cormorant Garamond',serif; }
+.container { max-width:1200px; margin:0 auto; padding:0 24px; }
+.gold-line { width:60px; height:2px; background:linear-gradient(90deg,var(--gold),var(--gold-light)); margin:12px 0 20px; }
+.gold-line.center { margin:12px auto 20px; }
+
+.btn-gold {
+  display:inline-block; padding:12px 32px;
+  background:transparent; border:1px solid var(--gold);
+  color:var(--gold); font-family:'Josefin Sans',sans-serif;
+  font-size:11px; letter-spacing:3px; text-transform:uppercase;
+  text-decoration:none; cursor:pointer; transition:all 0.35s ease;
+  position:relative; overflow:hidden;
+}
+.btn-gold::before {
+  content:''; position:absolute; top:0; left:-100%; width:100%; height:100%;
+  background:var(--gold); transition:left 0.35s ease; z-index:-1;
+}
+.btn-gold:hover { color:var(--oxford-dark); }
+.btn-gold:hover::before { left:0; }
+
+.btn-gold-filled {
+  display:inline-block; padding:12px 32px;
+  background:var(--gold); border:1px solid var(--gold);
+  color:var(--oxford-dark); font-family:'Josefin Sans',sans-serif;
+  font-size:11px; letter-spacing:3px; text-transform:uppercase;
+  text-decoration:none; cursor:pointer; transition:all 0.35s ease;
+}
+.btn-gold-filled:hover { background:var(--gold-light); }
+
+section { padding:80px 0; }
+
+/* ======== NAVBAR ======== */
+#navbar {
+  position:fixed; top:0; left:0; right:0; z-index:1000;
+  background:var(--oxford-dark); border-bottom:1px solid var(--border);
+}
+.navbar-top {
+  display:flex; align-items:center; justify-content:space-between;
+  padding:0 40px; height:70px;
+}
+.nav-logo {
+  display:flex; align-items:center; gap:10px;
+  text-decoration:none; cursor:pointer;
+}
+.nav-logo-icon {
+  width:44px; height:44px; background:var(--gold);
+  display:flex; align-items:center; justify-content:center;
+  font-family:'Cormorant Garamond',serif; font-size:22px;
+  color:var(--oxford-dark); font-weight:600;
+}
+.nav-logo-text { font-family:'Cormorant Garamond',serif; font-size:22px; color:var(--white); letter-spacing:3px; font-weight:300; }
+.nav-logo-text span { color:var(--gold); }
+.nav-links { display:flex; align-items:center; gap:36px; list-style:none; }
+.nav-links a {
+  font-size:10px; letter-spacing:2.5px; text-transform:uppercase;
+  color:rgba(255,255,255,0.7); text-decoration:none; cursor:pointer;
+  transition:color 0.3s; position:relative; padding-bottom:4px;
+}
+.nav-links a::after {
+  content:''; position:absolute; bottom:0; left:0;
+  width:0; height:1px; background:var(--gold); transition:width 0.3s;
+}
+.nav-links a:hover, .nav-links a.active { color:var(--gold); }
+.nav-links a:hover::after, .nav-links a.active::after { width:100%; }
+
+.navbar-search {
+  background:rgba(201,168,76,0.06); border-top:1px solid var(--border);
+  padding:14px 40px; display:none; flex-direction:column; align-items:center; gap:6px;
+}
+.navbar-search.visible { display:flex; }
+.search-label { font-size:9px; letter-spacing:3px; text-transform:uppercase; color:var(--gold); }
+.search-wrap {
+  display:flex; align-items:center; background:rgba(255,255,255,0.04);
+  border:1px solid var(--border); width:480px; max-width:100%;
+}
+.search-wrap input {
+  flex:1; background:transparent; border:none; outline:none;
+  padding:9px 16px; color:var(--white); font-family:'Josefin Sans',sans-serif;
+  font-size:12px; letter-spacing:1px;
+}
+.search-wrap input::placeholder { color:rgba(255,255,255,0.3); }
+.search-wrap button { padding:9px 18px; background:var(--gold); border:none; color:var(--oxford-dark); cursor:pointer; font-size:14px; }
+.hamburger { display:none; flex-direction:column; gap:5px; cursor:pointer; padding:4px; }
+.hamburger span { width:24px; height:1.5px; background:var(--gold); transition:all 0.3s; }
+
+.page-content { padding-top:70px; }
+.page-content.with-search { padding-top:120px; }
+
+/* ======== HERO CAROUSEL ======== */
+.hero-carousel { position:relative; height:calc(100vh - 70px); overflow:hidden; }
+.hero-slides { display:flex; height:100%; transition:transform 0.8s cubic-bezier(0.77,0,0.175,1); }
+.hero-slide {
+  min-width:100%; position:relative;
+  display:flex; align-items:center; cursor:pointer;
+}
+.hero-img {
+  position:absolute; inset:0;
+  background-size:cover; background-position:center;
+  transition:transform 6s ease;
+}
+.hero-slide:hover .hero-img { transform:scale(1.03); }
+.hero-overlay {
+  position:absolute; inset:0;
+  background:linear-gradient(135deg,rgba(26,30,42,0.75) 0%,rgba(26,30,42,0.35) 60%,transparent 100%);
+}
+.hero-content { position:relative; z-index:2; padding:0 80px; max-width:680px; }
+.hero-tag { font-size:9px; letter-spacing:5px; text-transform:uppercase; color:var(--gold); margin-bottom:20px; display:block; }
+.hero-content h1 { font-size:clamp(42px,6vw,76px); font-weight:300; color:var(--white); line-height:1.1; margin-bottom:24px; }
+.hero-content h1 em { color:var(--gold); font-style:italic; }
+.hero-content p { font-size:13px; letter-spacing:1px; color:rgba(255,255,255,0.65); line-height:1.9; margin-bottom:40px; max-width:480px; }
+.hero-nav { position:absolute; bottom:40px; left:50%; transform:translateX(-50%); display:flex; gap:10px; z-index:3; }
+.hero-dot { width:28px; height:2px; background:rgba(255,255,255,0.3); cursor:pointer; transition:all 0.3s; }
+.hero-dot.active { background:var(--gold); width:44px; }
+.hero-arrow {
+  position:absolute; top:50%; transform:translateY(-50%);
+  background:rgba(201,168,76,0.15); border:1px solid var(--border);
+  color:var(--gold); width:50px; height:50px;
+  display:flex; align-items:center; justify-content:center;
+  cursor:pointer; z-index:3; font-size:18px; transition:all 0.3s; backdrop-filter:blur(4px);
+}
+.hero-arrow:hover { background:var(--gold); color:var(--oxford-dark); }
+.hero-arrow.prev { left:30px; }
+.hero-arrow.next { right:30px; }
+.hero-click-hint {
+  position:absolute; bottom:90px; right:40px; z-index:3;
+  font-size:9px; letter-spacing:2px; color:rgba(255,255,255,0.5); text-transform:uppercase;
+}
+
+/* ======== SOCIAL STRIP ======== */
+.social-strip {
+  background:var(--oxford); padding:30px 0;
+  border-top:1px solid var(--border); border-bottom:1px solid var(--border);
+}
+.social-strip-inner { display:flex; justify-content:center; align-items:stretch; gap:0; }
+.strip-item {
+  display:flex; flex-direction:column; align-items:center; gap:12px;
+  padding:10px 44px; border-right:1px solid var(--border);
+  text-decoration:none; transition:background 0.3s; cursor:pointer;
+}
+.strip-item:last-child { border-right:none; }
+.strip-item:hover { background:rgba(201,168,76,0.05); }
+.strip-main-icon { font-size:22px; color:var(--gold); margin-bottom:4px; }
+.strip-sub-icons { display:flex; gap:8px; }
+.strip-sub-icon {
+  width:28px; height:28px; border:1px solid var(--border); border-radius:50%;
+  display:flex; align-items:center; justify-content:center;
+  color:rgba(255,255,255,0.6); font-size:12px; text-decoration:none;
+  transition:all 0.3s;
+}
+.strip-sub-icon:hover { border-color:var(--gold); color:var(--gold); }
+.strip-title { font-size:9px; letter-spacing:2px; text-transform:uppercase; color:var(--white); }
+.strip-desc { font-size:10px; color:var(--text-muted); letter-spacing:0.5px; text-align:center; }
+
+/* ======== ABOUT ======== */
+.about-section { background:var(--cream); }
+.about-grid { display:grid; grid-template-columns:1fr 1fr; gap:64px; align-items:center; }
+.about-tag { font-size:9px; letter-spacing:4px; text-transform:uppercase; color:var(--gold); margin-bottom:16px; display:block; }
+.about-text-side h2 { font-size:clamp(28px,3.5vw,48px); font-weight:300; color:var(--oxford-dark); margin-bottom:8px; }
+.about-text-side p { font-size:12px; line-height:2; color:var(--oxford-light); letter-spacing:0.5px; margin-bottom:20px; }
+.mvv-row { display:flex; gap:28px; margin-top:32px; }
+.mvv-item h4 { font-size:16px; color:var(--gold); margin-bottom:8px; font-weight:400; }
+.mvv-item p { font-size:10px; line-height:1.8; color:var(--text-muted); margin-bottom:0; }
+.social-icons-row { display:flex; gap:10px; margin-top:28px; }
+.si-link {
+  width:36px; height:36px; border:1px solid var(--border);
+  display:flex; align-items:center; justify-content:center;
+  color:var(--oxford); font-size:15px; text-decoration:none; transition:all 0.3s;
+  border-radius:50%;
+}
+.si-link:hover { border-color:var(--gold); color:var(--gold); background:rgba(201,168,76,0.08); }
+
+/* Image side - always half layout */
+.about-img-side { position:relative; }
+.about-img-box { width:100%; padding-top:115%; position:relative; overflow:hidden; }
+.about-img-box img, .about-img-box .img-ph {
+  position:absolute; inset:0; width:100%; height:100%; object-fit:cover;
+}
+.img-ph {
+  background:linear-gradient(135deg,var(--oxford) 0%,var(--oxford-light) 100%);
+  display:flex; align-items:center; justify-content:center;
+  color:var(--gold); font-family:'Cormorant Garamond',serif;
+  font-size:13px; letter-spacing:4px; text-align:center; padding:20px;
+}
+
+/* ======== LO QUE HACEMOS ======== */
+.what-section { background:var(--oxford-dark); }
+.what-section h2 { font-size:clamp(28px,4vw,48px); font-weight:300; color:var(--white); text-align:center; margin-bottom:8px; }
+.what-section .section-sub { text-align:center; font-size:11px; letter-spacing:2px; color:var(--text-muted); margin-bottom:52px; }
+.what-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:20px; }
+.what-card {
+  background:var(--oxford); overflow:hidden; cursor:pointer;
+  transition:transform 0.35s,box-shadow 0.35s; display:flex; flex-direction:column;
+  border:1px solid rgba(201,168,76,0.1);
+}
+.what-card:hover { transform:translateY(-8px); box-shadow:0 20px 60px rgba(0,0,0,0.4); }
+.what-card-img { width:100%; padding-top:70%; position:relative; overflow:hidden; }
+.what-card-img img, .what-card-img .img-ph {
+  position:absolute; inset:0; width:100%; height:100%; object-fit:cover;
+  transition:transform 0.5s ease;
+}
+.what-card:hover .what-card-img img,
+.what-card:hover .what-card-img .img-ph { transform:scale(1.07); }
+.what-card-body { padding:24px 22px; flex:1; display:flex; flex-direction:column; }
+.what-card-body h3 { font-size:20px; color:var(--white); margin-bottom:10px; font-weight:400; }
+.what-card-body p { font-size:11px; line-height:1.9; color:var(--text-muted); flex:1; margin-bottom:20px; letter-spacing:0.5px; }
+
+/* ======== ARELI ======== */
+.areli-section { background:var(--cream); }
+.areli-grid { display:grid; grid-template-columns:1fr 1fr; gap:64px; align-items:center; }
+.areli-img-box { width:100%; padding-top:110%; position:relative; overflow:hidden; }
+.areli-img-box img, .areli-img-box .img-ph {
+  position:absolute; inset:0; width:100%; height:100%; object-fit:cover;
+}
+.areli-text h2 { font-size:clamp(28px,3.5vw,48px); font-weight:300; color:var(--oxford-dark); margin-bottom:8px; }
+.areli-text h4 { font-size:12px; letter-spacing:3px; color:var(--gold); margin-bottom:20px; font-family:'Josefin Sans',sans-serif; font-weight:300; }
+.areli-text p { font-size:12px; line-height:2; color:var(--oxford-light); letter-spacing:0.5px; margin-bottom:16px; }
+
+/* ======== INFO CAROUSEL (1 at a time) ======== */
+.info-carousel-section { background:var(--oxford); overflow:hidden; padding:0; }
+.info-carousel-wrap { overflow:hidden; }
+.info-slides { display:flex; transition:transform 0.7s cubic-bezier(0.77,0,0.175,1); }
+.info-slide {
+  min-width:100%; display:flex; align-items:stretch; border-right:1px solid var(--border);
+}
+.info-slide-text {
+  flex:1; padding:70px 64px; display:flex; flex-direction:column; justify-content:center;
+}
+.info-slide-text .tag { font-size:9px; letter-spacing:4px; text-transform:uppercase; color:var(--gold); margin-bottom:20px; }
+.info-slide-text h3 { font-size:clamp(24px,2.8vw,40px); color:var(--white); font-weight:300; margin-bottom:20px; line-height:1.3; }
+.info-slide-text p { font-size:12px; line-height:2; color:var(--text-muted); margin-bottom:36px; letter-spacing:0.5px; }
+.info-slide-img { width:44%; flex-shrink:0; position:relative; overflow:hidden; min-height:380px; }
+.info-slide-img img, .info-slide-img .img-ph {
+  position:absolute; inset:0; width:100%; height:100%; object-fit:cover;
+}
+.info-carousel-controls {
+  display:flex; justify-content:center; align-items:center; gap:20px;
+  padding:28px; border-top:1px solid var(--border);
+}
+.info-arrow {
+  width:44px; height:44px; border:1px solid var(--border);
+  display:flex; align-items:center; justify-content:center;
+  cursor:pointer; color:var(--gold); font-size:16px; transition:all 0.3s; background:transparent;
+}
+.info-arrow:hover { background:var(--gold); color:var(--oxford-dark); }
+.info-dots { display:flex; gap:8px; }
+.info-dot { width:24px; height:2px; background:rgba(255,255,255,0.2); cursor:pointer; transition:all 0.3s; }
+.info-dot.active { background:var(--gold); width:36px; }
+
+/* ======== ÚNETE ======== */
+.join-section {
+  background:linear-gradient(135deg,var(--oxford-dark),var(--oxford));
+  text-align:center; padding:100px 0; position:relative; overflow:hidden;
+}
+.join-section::before {
+  content:'M'; position:absolute; font-family:'Cormorant Garamond',serif;
+  font-size:400px; color:rgba(201,168,76,0.04);
+  top:50%; left:50%; transform:translate(-50%,-50%); user-select:none;
+}
+.join-section h2 { font-size:clamp(28px,4vw,56px); color:var(--white); font-weight:300; margin-bottom:16px; position:relative; }
+.join-section h2 em { color:var(--gold); }
+.join-section p { font-size:12px; letter-spacing:1.5px; color:var(--text-muted); margin-bottom:40px; position:relative; }
+
+/* ======== TESTIMONIOS ======== */
+.testimonios-section { background:var(--cream); }
+.testimonios-section h2 { font-size:clamp(28px,3.5vw,48px); color:var(--oxford-dark); text-align:center; font-weight:300; margin-bottom:8px; }
+.test-carousel-wrap { overflow:hidden; margin-top:48px; }
+.test-slides { display:flex; transition:transform 0.7s ease; }
+.test-slide { min-width:33.333%; padding:0 14px; }
+.test-card { background:var(--white); border:1px solid var(--border); padding:36px 32px; transition:transform 0.3s,box-shadow 0.3s; }
+.test-card:hover { transform:translateY(-4px); box-shadow:var(--shadow); }
+.test-quote { font-size:48px; color:var(--gold); font-family:'Cormorant Garamond',serif; line-height:1; margin-bottom:12px; display:block; }
+.test-text { font-size:12px; line-height:2; color:var(--oxford-light); letter-spacing:0.5px; margin-bottom:24px; font-style:italic; }
+.test-author { display:flex; align-items:center; gap:14px; }
+.test-avatar { width:44px; height:44px; border-radius:50%; background:linear-gradient(135deg,var(--oxford),var(--gold)); display:flex; align-items:center; justify-content:center; color:var(--white); font-size:16px; font-family:'Cormorant Garamond',serif; }
+.test-name { font-size:11px; letter-spacing:2px; color:var(--oxford); }
+.test-role { font-size:10px; color:var(--gold); letter-spacing:1px; }
+.test-controls { display:flex; justify-content:center; gap:10px; margin-top:32px; }
+.test-dot { width:28px; height:2px; background:var(--border); cursor:pointer; transition:all 0.3s; }
+.test-dot.active { background:var(--gold); width:44px; }
+
+/* ======== NEWSLETTER ======== */
+.newsletter-section { background:var(--oxford-dark); padding:80px 0; text-align:center; }
+.newsletter-section h2 { font-size:clamp(24px,3vw,42px); color:var(--white); font-weight:300; margin-bottom:8px; }
+.newsletter-section p { font-size:11px; letter-spacing:2px; color:var(--text-muted); margin-bottom:36px; }
+.newsletter-form { display:flex; max-width:500px; margin:0 auto; border:1px solid var(--border); }
+.newsletter-form input { flex:1; background:transparent; border:none; outline:none; padding:14px 20px; color:var(--white); font-family:'Josefin Sans',sans-serif; font-size:11px; letter-spacing:1px; }
+.newsletter-form input::placeholder { color:rgba(255,255,255,0.3); }
+.newsletter-form button { background:var(--gold); border:none; padding:14px 28px; color:var(--oxford-dark); font-family:'Josefin Sans',sans-serif; font-size:10px; letter-spacing:2px; text-transform:uppercase; cursor:pointer; transition:background 0.3s; }
+.newsletter-form button:hover { background:var(--gold-light); }
+
+/* ======== BRAND LOGO ======== */
+.brand-logo-section { background:var(--cream); padding:80px 0; text-align:center; }
+.brand-logo-big { font-family:'Cormorant Garamond',serif; font-size:clamp(48px,8vw,110px); font-weight:300; color:var(--oxford-dark); letter-spacing:12px; }
+.brand-logo-big span { color:var(--gold); }
+.brand-logo-tagline { font-size:10px; letter-spacing:8px; text-transform:uppercase; color:var(--text-muted); margin-top:12px; }
+
+/* ======== FOOTER ======== */
+#footer { background:var(--oxford-dark); border-top:1px solid var(--border); padding:70px 0 0; }
+.footer-inner { display:grid; grid-template-columns:1.5fr 1fr 1fr 1fr; gap:48px; padding-bottom:50px; border-bottom:1px solid var(--border); }
+.footer-brand p { font-size:11px; line-height:1.9; color:var(--text-muted); letter-spacing:0.5px; margin:16px 0 24px; }
+.footer-col h5 { font-size:9px; letter-spacing:3px; text-transform:uppercase; color:var(--gold); margin-bottom:20px; font-family:'Josefin Sans',sans-serif; }
+.footer-col ul { list-style:none; }
+.footer-col ul li { margin-bottom:12px; }
+.footer-col ul li a { font-size:11px; color:var(--text-muted); text-decoration:none; letter-spacing:1px; transition:color 0.3s; cursor:pointer; display:block; }
+.footer-col ul li a:hover { color:var(--gold); }
+.footer-social-row { display:flex; gap:10px; margin-top:8px; }
+.footer-bottom { padding:20px 0; display:flex; justify-content:space-between; align-items:center; }
+.footer-bottom p { font-size:10px; color:var(--text-muted); letter-spacing:1px; }
+.footer-bottom-links { display:flex; gap:28px; }
+.footer-bottom-links a { font-size:10px; color:var(--text-muted); text-decoration:none; letter-spacing:1px; transition:color 0.3s; cursor:pointer; }
+.footer-bottom-links a:hover { color:var(--gold); }
+
+/* ======== ACADEMIA ======== */
+.academia-hero { background:var(--oxford-dark); padding:80px 0; }
+.academia-hero-grid { display:grid; grid-template-columns:1fr 1fr; gap:80px; align-items:center; }
+.academia-hero-img { width:100%; padding-top:75%; position:relative; overflow:hidden; }
+.academia-hero-img img, .academia-hero-img .img-ph { position:absolute; inset:0; width:100%; height:100%; object-fit:cover; }
+.academia-hero-text h2 { font-size:clamp(28px,4vw,52px); color:var(--white); font-weight:300; margin-bottom:8px; }
+.academia-hero-text p { font-size:12px; line-height:2; color:var(--text-muted); margin:20px 0 36px; letter-spacing:0.5px; }
+
+.modalidades-section { background:var(--cream); text-align:center; }
+.modalidades-section h2 { font-size:clamp(26px,3.5vw,48px); color:var(--oxford-dark); font-weight:300; margin-bottom:8px; }
+.modalidades-section .sub { font-size:11px; letter-spacing:1.5px; color:var(--text-muted); margin-bottom:56px; }
+.modalidades-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:24px; }
+.modalidad-card {
+  background:var(--white); border:1px solid var(--border); padding:50px 36px;
+  cursor:pointer; transition:all 0.4s ease; text-align:center; position:relative; overflow:hidden;
+}
+.modalidad-card::before {
+  content:''; position:absolute; bottom:0; left:0; right:0; height:3px;
+  background:var(--gold); transform:scaleX(0); transition:transform 0.4s;
+}
+.modalidad-card:hover::before { transform:scaleX(1); }
+.modalidad-card:hover { transform:translateY(-8px); box-shadow:var(--shadow); }
+.modalidad-icon { font-size:40px; margin-bottom:20px; display:block; }
+.modalidad-card h3 { font-size:22px; color:var(--oxford-dark); margin-bottom:12px; font-weight:400; }
+.modalidad-card p { font-size:11px; line-height:1.9; color:var(--text-muted); margin-bottom:28px; letter-spacing:0.5px; }
+
+.metodo-section { background:var(--oxford-dark); }
+.metodo-section h2 { font-size:clamp(26px,3.5vw,44px); color:var(--white); font-weight:300; text-align:center; margin-bottom:56px; }
+.metodo-steps { display:flex; align-items:flex-start; position:relative; }
+.metodo-steps::before { content:''; position:absolute; top:28px; left:0; right:0; height:1px; background:var(--border); z-index:0; }
+.metodo-step { flex:1; text-align:center; position:relative; z-index:1; }
+.step-num { width:56px; height:56px; border:1px solid var(--gold); border-radius:50%; display:flex; align-items:center; justify-content:center; margin:0 auto 20px; background:var(--oxford-dark); font-family:'Cormorant Garamond',serif; font-size:20px; color:var(--gold); }
+.metodo-step h4 { font-size:15px; color:var(--white); margin-bottom:10px; font-weight:400; }
+.metodo-step p { font-size:10px; color:var(--text-muted); line-height:1.8; letter-spacing:0.5px; padding:0 16px; }
+
+.cursos-pop-section { background:var(--cream); }
+.cursos-pop-section h2 { font-size:clamp(26px,3.5vw,44px); color:var(--oxford-dark); font-weight:300; margin-bottom:8px; }
+.cursos-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:24px; margin-top:48px; }
+.curso-card { background:var(--white); border:1px solid var(--border); overflow:hidden; cursor:pointer; transition:all 0.35s; }
+.curso-card:hover { transform:translateY(-6px); box-shadow:var(--shadow); }
+.curso-card-img { width:100%; padding-top:60%; position:relative; overflow:hidden; }
+.curso-card-img img, .curso-card-img .img-ph { position:absolute; inset:0; width:100%; height:100%; object-fit:cover; transition:transform 0.5s; }
+.curso-card:hover .curso-card-img img,
+.curso-card:hover .curso-card-img .img-ph { transform:scale(1.08); }
+.curso-card-body { padding:26px 22px; }
+.curso-tag { font-size:9px; letter-spacing:3px; color:var(--gold); text-transform:uppercase; margin-bottom:10px; display:block; }
+.curso-card-body h3 { font-size:20px; color:var(--oxford-dark); font-weight:400; margin-bottom:10px; }
+.curso-card-body p { font-size:11px; color:var(--text-muted); line-height:1.9; margin-bottom:16px; letter-spacing:0.5px; }
+.curso-price { font-size:22px; color:var(--gold); font-family:'Cormorant Garamond',serif; font-weight:300; }
+
+/* ======== SERVICIOS ======== */
+.servicios-hero { position:relative; height:440px; overflow:hidden; display:flex; align-items:center; justify-content:center; }
+.servicios-hero-bg { position:absolute; inset:0; background:linear-gradient(135deg,var(--oxford-dark),var(--oxford-light)); }
+.servicios-hero-bg::after { content:''; position:absolute; inset:0; background:rgba(26,30,42,0.5); }
+.servicios-hero-content { position:relative; z-index:2; text-align:center; }
+.servicios-hero-content h1 { font-size:clamp(36px,5vw,68px); color:var(--white); font-weight:300; margin-bottom:20px; }
+.servicios-hero-content h1 em { color:var(--gold); }
+.servicios-about { background:var(--cream); }
+.servicios-about-inner { max-width:800px; margin:0 auto; text-align:center; }
+.servicios-about-inner h2 { font-size:clamp(24px,3vw,40px); color:var(--oxford-dark); font-weight:300; margin-bottom:20px; }
+.servicios-about-inner p { font-size:12px; line-height:2; color:var(--oxford-light); letter-spacing:0.5px; margin-bottom:16px; }
+.servicios-list { background:var(--oxford-dark); }
+.servicios-list h2 { font-size:clamp(26px,3.5vw,44px); color:var(--white); font-weight:300; text-align:center; margin-bottom:56px; }
+.servicios-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:20px; }
+.servicio-card { background:var(--oxford); overflow:hidden; cursor:pointer; transition:transform 0.35s; border:1px solid rgba(201,168,76,0.1); }
+.servicio-card:hover { transform:translateY(-6px); box-shadow:0 20px 50px rgba(0,0,0,0.4); }
+.servicio-card-img { width:100%; padding-top:65%; position:relative; overflow:hidden; }
+.servicio-card-img img, .servicio-card-img .img-ph { position:absolute; inset:0; width:100%; height:100%; object-fit:cover; transition:transform 0.5s; }
+.servicio-card:hover .servicio-card-img img,
+.servicio-card:hover .servicio-card-img .img-ph { transform:scale(1.08); }
+.servicio-card-body { padding:26px 22px; }
+.servicio-card-body h3 { font-size:20px; color:var(--white); font-weight:400; margin-bottom:10px; }
+.servicio-card-body p { font-size:11px; color:var(--text-muted); line-height:1.9; margin-bottom:18px; letter-spacing:0.5px; }
+
+/* ======== BLOG ======== */
+.blog-hero { background:var(--oxford-dark); padding:70px 0; text-align:center; }
+.blog-hero h1 { font-size:clamp(32px,5vw,70px); color:var(--white); font-weight:300; margin-bottom:12px; }
+.blog-hero h1 em { color:var(--gold); font-style:italic; }
+.blog-hero p { font-size:11px; letter-spacing:2px; color:var(--text-muted); }
+.blog-section { background:var(--cream); }
+.blog-section h2 { font-size:clamp(24px,3vw,40px); color:var(--oxford-dark); font-weight:300; margin-bottom:44px; }
+.blog-filters { display:flex; gap:10px; flex-wrap:wrap; margin-bottom:36px; }
+.blog-filter { padding:8px 22px; border:1px solid var(--border); background:transparent; font-family:'Josefin Sans',sans-serif; font-size:9px; letter-spacing:2.5px; text-transform:uppercase; color:var(--oxford); cursor:pointer; transition:all 0.3s; }
+.blog-filter.active, .blog-filter:hover { background:var(--gold); border-color:var(--gold); color:var(--oxford-dark); }
+.blog-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:28px; }
+.blog-card { background:var(--white); border:1px solid var(--border); overflow:hidden; cursor:pointer; transition:all 0.35s; }
+.blog-card:hover { transform:translateY(-6px); box-shadow:var(--shadow); }
+.blog-card-img { width:100%; padding-top:60%; position:relative; overflow:hidden; }
+.blog-card-img img, .blog-card-img .img-ph { position:absolute; inset:0; width:100%; height:100%; object-fit:cover; transition:transform 0.5s; }
+.blog-card:hover .blog-card-img img,
+.blog-card:hover .blog-card-img .img-ph { transform:scale(1.08); }
+.blog-card-body { padding:22px 20px; }
+.blog-meta { display:flex; align-items:center; gap:10px; margin-bottom:12px; }
+.blog-author-avatar { width:32px; height:32px; border-radius:50%; background:linear-gradient(135deg,var(--oxford),var(--gold)); display:flex; align-items:center; justify-content:center; color:var(--white); font-size:12px; font-family:'Cormorant Garamond',serif; flex-shrink:0; }
+.blog-author-name { font-size:10px; letter-spacing:1px; color:var(--oxford); }
+.blog-date { font-size:9px; color:var(--text-muted); letter-spacing:1px; margin-bottom:6px; }
+.blog-category { font-size:8px; letter-spacing:3px; text-transform:uppercase; color:var(--gold); margin-bottom:8px; display:block; }
+.blog-card-body h3 { font-size:19px; color:var(--oxford-dark); font-weight:400; margin-bottom:8px; line-height:1.3; }
+.blog-card-body p { font-size:11px; color:var(--text-muted); line-height:1.9; margin-bottom:18px; letter-spacing:0.5px; }
+
+/* ======== CONTACTO ======== */
+.contacto-section { background:var(--cream); padding:80px 0; }
+.contacto-section h1 { font-size:clamp(30px,4vw,56px); font-weight:300; color:var(--oxford-dark); margin-bottom:8px; text-align:center; }
+.contacto-grid { display:grid; grid-template-columns:1fr 1.4fr; gap:60px; margin-top:60px; }
+.contact-block { margin-bottom:32px; }
+.contact-block h4 { font-size:9px; letter-spacing:3px; text-transform:uppercase; color:var(--gold); margin-bottom:14px; }
+.contact-item { display:flex; align-items:center; gap:14px; margin-bottom:12px; text-decoration:none; transition:color 0.3s; }
+.contact-item:hover { color:var(--gold); }
+.contact-item-icon { width:36px; height:36px; border:1px solid var(--border); display:flex; align-items:center; justify-content:center; color:var(--gold); font-size:14px; flex-shrink:0; }
+.contact-item-text { font-size:11px; color:var(--oxford-light); letter-spacing:0.5px; }
+.map-placeholder { width:100%; height:220px; background:linear-gradient(135deg,var(--oxford),var(--oxford-light)); border:1px solid var(--border); display:flex; align-items:center; justify-content:center; color:var(--gold); font-size:13px; letter-spacing:3px; margin-top:16px; position:relative; overflow:hidden; }
+.form-group { margin-bottom:18px; }
+.form-group label { display:block; font-size:9px; letter-spacing:2px; text-transform:uppercase; color:var(--gold); margin-bottom:8px; }
+.form-group input, .form-group textarea { width:100%; background:var(--white); border:1px solid var(--border); padding:13px 16px; font-family:'Josefin Sans',sans-serif; font-size:11px; color:var(--oxford); letter-spacing:0.5px; outline:none; transition:border-color 0.3s; }
+.form-group input:focus, .form-group textarea:focus { border-color:var(--gold); }
+.form-group textarea { height:120px; resize:vertical; }
+
+/* ======== LEGAL / FAQ ======== */
+.legal-section { background:var(--cream); padding:100px 0; }
+.legal-content { max-width:800px; margin:0 auto; }
+.legal-content h1 { font-size:clamp(28px,4vw,52px); font-weight:300; color:var(--oxford-dark); margin-bottom:32px; }
+.legal-content h3 { font-size:20px; color:var(--gold); font-weight:400; margin:32px 0 12px; }
+.legal-content p { font-size:12px; line-height:2; color:var(--oxford-light); letter-spacing:0.5px; margin-bottom:16px; }
+.faq-section { background:var(--cream); padding:100px 0; }
+.faq-content { max-width:800px; margin:0 auto; }
+.faq-content h1 { font-size:clamp(28px,4vw,52px); font-weight:300; color:var(--oxford-dark); margin-bottom:48px; }
+.faq-item { border-bottom:1px solid var(--border); padding:24px 0; cursor:pointer; }
+.faq-q { display:flex; justify-content:space-between; align-items:center; }
+.faq-q h4 { font-size:17px; color:var(--oxford-dark); font-weight:400; }
+.faq-icon { width:24px; height:24px; border:1px solid var(--border); display:flex; align-items:center; justify-content:center; color:var(--gold); font-size:14px; transition:transform 0.3s; flex-shrink:0; }
+.faq-item.open .faq-icon { transform:rotate(45deg); }
+.faq-a { font-size:11px; line-height:2; color:var(--text-muted); letter-spacing:0.5px; max-height:0; overflow:hidden; transition:max-height 0.4s ease,padding 0.3s; }
+.faq-item.open .faq-a { max-height:200px; padding-top:16px; }
+
+/* ======== IMAGE PLACEHOLDERS with gradients ======== */
+.img-ph {
+  background:linear-gradient(135deg,var(--oxford) 0%,var(--oxford-light) 100%);
+  display:flex; align-items:center; justify-content:center;
+  color:var(--gold); font-family:'Cormorant Garamond',serif;
+  font-size:13px; letter-spacing:3px; text-align:center; padding:16px;
+}
+.img-ph.beauty-1 { background:linear-gradient(135deg,#1a1520,#3d2b4a); }
+.img-ph.beauty-2 { background:linear-gradient(135deg,#1a2030,#2c4060); }
+.img-ph.beauty-3 { background:linear-gradient(135deg,#201520,#40202a); }
+.img-ph.beauty-4 { background:linear-gradient(135deg,#151a20,#2a3040); }
+.img-ph.gold-grad { background:linear-gradient(135deg,#2c2010,#c9a84c44); }
+
+/* ======== RESPONSIVE ======== */
+@media(max-width:1024px) {
+  .what-grid { grid-template-columns:repeat(2,1fr); }
+  .servicios-grid { grid-template-columns:repeat(2,1fr); }
+  .cursos-grid { grid-template-columns:repeat(2,1fr); }
+  .blog-grid { grid-template-columns:repeat(2,1fr); }
+  .footer-inner { grid-template-columns:1fr 1fr; gap:36px; }
+}
+@media(max-width:768px) {
+  .navbar-top { padding:0 20px; }
+  .nav-links { display:none; }
+  .nav-links.open { display:flex; flex-direction:column; position:absolute; top:70px; left:0; right:0; background:var(--oxford-dark); border-top:1px solid var(--border); padding:24px; gap:20px; }
+  .hamburger { display:flex; }
+  .hero-content { padding:0 24px; }
+  .about-grid,.areli-grid,.academia-hero-grid,.contacto-grid { grid-template-columns:1fr; }
+  .mvv-row { flex-direction:column; gap:20px; }
+  .what-grid,.cursos-grid,.blog-grid,.servicios-grid { grid-template-columns:1fr; }
+  .modalidades-grid { grid-template-columns:1fr; }
+  .metodo-steps { flex-direction:column; align-items:center; gap:32px; }
+  .metodo-steps::before { display:none; }
+  .test-slide { min-width:100%; }
+  .info-slide { flex-direction:column; }
+  .info-slide-img { width:100%; min-height:220px; }
+  .footer-inner { grid-template-columns:1fr; }
+  .social-strip-inner { flex-wrap:wrap; }
+  .strip-item { border-right:none; border-bottom:1px solid var(--border); width:100%; padding:16px 24px; }
+  .strip-item:last-child { border-bottom:none; }
+  .search-wrap { width:100%; }
+  .navbar-search { padding:14px 20px; }
+}
+</style>
+</head>
+<body>
+
+<!-- ======== NAVBAR ======== -->
+<nav id="navbar">
+  <div class="navbar-top">
+    <div class="nav-logo" onclick="goPage('inicio')">
+      <div class="nav-logo-icon">M</div>
+      <div class="nav-logo-text">META<span>beauty</span></div>
+    </div>
+    <ul class="nav-links" id="navLinks">
+      <li><a href="#" onclick="goPage('inicio');return false;" data-page="inicio" class="active">Inicio</a></li>
+      <li><a href="#" onclick="goPage('academia');return false;" data-page="academia">Academia</a></li>
+      <li><a href="#" onclick="goPage('servicios');return false;" data-page="servicios">Servicios</a></li>
+      <li><a href="#" onclick="goPage('blog');return false;" data-page="blog">Blog</a></li>
+      <li><a href="#" onclick="goPage('contacto');return false;" data-page="contacto">Contacto</a></li>
+    </ul>
+    <div class="hamburger" id="hamburger" onclick="toggleMenu()">
+      <span></span><span></span><span></span>
+    </div>
+  </div>
+  <div class="navbar-search" id="navSearch">
+    <span class="search-label" id="searchLabel">Busca tu curso</span>
+    <div class="search-wrap">
+      <input type="text" id="searchInput" placeholder="Escribe aquí...">
+      <button onclick="doSearch()">🔍</button>
+    </div>
+  </div>
+</nav>
+
+<!-- ======== PÁGINA: INICIO ======== -->
+<div class="page active" id="page-inicio">
+<div class="page-content">
+
+  <!-- HERO CAROUSEL (images, click to navigate) -->
+  <div class="hero-carousel">
+    <div class="hero-slides" id="heroSlides">
+
+      <!-- Slide 1 → Academia -->
+      <div class="hero-slide" onclick="goPage('academia')">
+        <div class="hero-img" style="background:linear-gradient(125deg,#0d0d14 0%,#1a1020 40%,#2a1535 70%,#c9a84c22 100%);">
+          <!-- Placeholder image - replace with: background-image:url('tu-imagen.jpg') -->
+          <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;opacity:0.18;">
+            <div style="font-size:220px;filter:grayscale(1);">🎓</div>
+          </div>
+        </div>
+        <div class="hero-overlay"></div>
+        <div class="hero-content">
+          <span class="hero-tag">Academia Metabeauty</span>
+          <h1>Transforma tu<br><em>pasión</em><br>en profesión</h1>
+          <p>Formamos artistas de la belleza con técnicas de vanguardia y métodos que marcan la diferencia.</p>
+          <span class="btn-gold" style="pointer-events:none;">Explorar Academia →</span>
+        </div>
+      </div>
+
+      <!-- Slide 2 → Servicios -->
+      <div class="hero-slide" onclick="goPage('servicios')">
+        <div class="hero-img" style="background:linear-gradient(125deg,#0d1214 0%,#10201a 40%,#152a20 70%,#c9a84c18 100%);">
+          <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;opacity:0.18;">
+            <div style="font-size:220px;filter:grayscale(1);">💄</div>
+          </div>
+        </div>
+        <div class="hero-overlay"></div>
+        <div class="hero-content">
+          <span class="hero-tag">Servicios Exclusivos</span>
+          <h1>Arte que<br>define tu<br><em>identidad</em></h1>
+          <p>Servicios de belleza de alto nivel diseñados para realzar tu esencia y hacerte brillar.</p>
+          <span class="btn-gold" style="pointer-events:none;">Ver Servicios →</span>
+        </div>
+      </div>
+
+      <!-- Slide 3 → Blog -->
+      <div class="hero-slide" onclick="goPage('blog')">
+        <div class="hero-img" style="background:linear-gradient(125deg,#140d10 0%,#241520 40%,#301a28 70%,#c9a84c18 100%);">
+          <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;opacity:0.18;">
+            <div style="font-size:220px;filter:grayscale(1);">✍</div>
+          </div>
+        </div>
+        <div class="hero-overlay"></div>
+        <div class="hero-content">
+          <span class="hero-tag">Blog Metabeauty</span>
+          <h1>Tendencias,<br>técnicas y<br><em>consejos</em></h1>
+          <p>Descubre los artículos más recientes sobre belleza, negocio y tendencias de la industria.</p>
+          <span class="btn-gold" style="pointer-events:none;">Leer Blog →</span>
+        </div>
+      </div>
+
+      <!-- Slide 4 → Contacto -->
+      <div class="hero-slide" onclick="goPage('contacto')">
+        <div class="hero-img" style="background:linear-gradient(125deg,#0d1014 0%,#14202a 40%,#1a2a38 70%,#c9a84c18 100%);">
+          <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;opacity:0.18;">
+            <div style="font-size:220px;filter:grayscale(1);">💬</div>
+          </div>
+        </div>
+        <div class="hero-overlay"></div>
+        <div class="hero-content">
+          <span class="hero-tag">Estamos para ti</span>
+          <h1>Hablemos<br>de tu <em>futuro</em><br>en belleza</h1>
+          <p>Agenda una consulta, cotiza un servicio o resuelve tus dudas con nuestro equipo.</p>
+          <span class="btn-gold" style="pointer-events:none;">Contáctanos →</span>
+        </div>
+      </div>
+
+    </div>
+    <div class="hero-arrow prev" onclick="event.stopPropagation();heroMove(-1)">&#8592;</div>
+    <div class="hero-arrow next" onclick="event.stopPropagation();heroMove(1)">&#8594;</div>
+    <div class="hero-click-hint">Click para explorar</div>
+    <div class="hero-nav" id="heroDots">
+      <div class="hero-dot active" onclick="event.stopPropagation();heroGo(0)"></div>
+      <div class="hero-dot" onclick="event.stopPropagation();heroGo(1)"></div>
+      <div class="hero-dot" onclick="event.stopPropagation();heroGo(2)"></div>
+      <div class="hero-dot" onclick="event.stopPropagation();heroGo(3)"></div>
+    </div>
+  </div>
+
+  <!-- SOCIAL STRIP -->
+  <div class="social-strip">
+    <div class="social-strip-inner">
+      
+      <!-- Dónde trabajamos -->
+      <div class="strip-item">
+        <div class="strip-main-icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--gold)" stroke-width="1.5"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/><circle cx="12" cy="9" r="2.5"/></svg>
+        </div>
+        <div class="strip-title">Donde Trabajamos</div>
+        <div class="strip-desc">Ciudad de México<br>& Online · Todo LATAM</div>
+      </div>
+      <!-- WhatsApp -->
+      <a class="strip-item" href="https://wa.me/521234567890" target="_blank">
+        <div class="strip-main-icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="var(--gold)"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347zM12 0C5.373 0 0 5.373 0 12c0 2.123.555 4.116 1.526 5.842L0 24l6.302-1.503A11.956 11.956 0 0 0 12 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.818a9.818 9.818 0 0 1-5.028-1.381l-.36-.214-3.733.89.937-3.629-.235-.373A9.78 9.78 0 0 1 2.182 12C2.182 6.578 6.578 2.182 12 2.182c5.422 0 9.818 4.396 9.818 9.818 0 5.422-4.396 9.818-9.818 9.818z"/></svg>
+        </div>
+        <div class="strip-title">WhatsApp</div>
+        <div class="strip-desc">+52 123 456 7890</div>
+      </a>
+      
+      <!-- Email -->
+      <a class="strip-item" href="mailto:hola@metabeauty.mx">
+        <div class="strip-main-icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--gold)" stroke-width="1.5"><rect x="2" y="4" width="20" height="16" rx="2"/><polyline points="2,4 12,13 22,4"/></svg>
+        </div>
+        <div class="strip-title">Email</div>
+        <div class="strip-desc">hola@metabeauty.mx</div>
+      </a>
+      
+      <!-- Redes sociales -->
+      <div class="strip-item">
+        <div class="strip-main-icon">📱</div>
+        <div class="strip-title">Redes Sociales</div>
+        <div class="strip-sub-icons">
+          <a href="#" class="strip-sub-icon" title="Facebook">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
+          </a>
+          <a href="#" class="strip-sub-icon" title="Instagram">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg>
+          </a>
+          <a href="https://wa.me/521234567890" class="strip-sub-icon" title="WhatsApp">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.123.555 4.116 1.526 5.842L0 24l6.302-1.503A11.956 11.956 0 0 0 12 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.818a9.818 9.818 0 0 1-5.028-1.381l-.36-.214-3.733.89.937-3.629-.235-.373A9.78 9.78 0 0 1 2.182 12C2.182 6.578 6.578 2.182 12 2.182c5.422 0 9.818 4.396 9.818 9.818 0 5.422-4.396 9.818-9.818 9.818z"/></svg>
+          </a>
+          <a href="#" class="strip-sub-icon" title="X (Twitter)">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+          </a>
+          <a href="#" class="strip-sub-icon" title="TikTok">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-2.88 2.5 2.89 2.89 0 0 1-2.89-2.89 2.89 2.89 0 0 1 2.89-2.89c.28 0 .54.04.79.1V9.01a6.33 6.33 0 0 0-.79-.05 6.34 6.34 0 0 0-6.34 6.34 6.34 6.34 0 0 0 6.34 6.34 6.34 6.34 0 0 0 6.33-6.34l-.01-8.83a8.17 8.17 0 0 0 4.78 1.52V4.56a4.85 4.85 0 0 1-1-.13z"/></svg>
+          </a>
+          <a href="#" class="strip-sub-icon" title="YouTube">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M22.54 6.42a2.78 2.78 0 0 0-1.95-1.96C18.88 4 12 4 12 4s-6.88 0-8.59.46a2.78 2.78 0 0 0-1.95 1.96A29 29 0 0 0 1 12a29 29 0 0 0 .46 5.58A2.78 2.78 0 0 0 3.41 19.6C5.12 20 12 20 12 20s6.88 0 8.59-.46a2.78 2.78 0 0 0 1.95-1.95A29 29 0 0 0 23 12a29 29 0 0 0-.46-5.58zM9.75 15.02V8.98L15.5 12l-5.75 3.02z"/></svg>
+          </a>
+        </div>
+        <div class="strip-desc">@metabeauty.mx</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- QUIÉNES SOMOS -->
+  <section class="about-section">
+    <div class="container">
+      <div class="about-grid">
+        <div class="about-text-side">
+          <span class="about-tag">Nuestra Historia</span>
+          <h2>Más que belleza,<br>somos arte</h2>
+          <div class="gold-line"></div>
+          <p>Metabeauty nació con la misión de transformar la industria de la belleza en México. Somos una academia y estudio profesional que fusiona técnica, creatividad y pasión para formar a los mejores artistas del sector.</p>
+          <p>Con más de una década de experiencia, hemos formado a cientos de profesionales que hoy trabajan con las marcas y clientes más reconocidos del país.</p>
+          <div class="mvv-row">
+            <div class="mvv-item">
+              <h4>Misión</h4>
+              <p>Empoderar a través de la belleza, formando profesionales de excelencia con valores y visión de futuro.</p>
+            </div>
+            <div class="mvv-item">
+              <h4>Visión</h4>
+              <p>Ser la academia de belleza más reconocida de Latinoamérica para 2030.</p>
+            </div>
+            <div class="mvv-item">
+              <h4>Valores</h4>
+              <p>Excelencia, creatividad, inclusión y compromiso con el desarrollo personal.</p>
+            </div>
+          </div>
+          <!-- Social icons: TikTok, YouTube, Facebook, Instagram -->
+          <div class="social-icons-row">
+            <a href="#" class="si-link" title="TikTok">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-2.88 2.5 2.89 2.89 0 0 1-2.89-2.89 2.89 2.89 0 0 1 2.89-2.89c.28 0 .54.04.79.1V9.01a6.33 6.33 0 0 0-.79-.05 6.34 6.34 0 0 0-6.34 6.34 6.34 6.34 0 0 0 6.34 6.34 6.34 6.34 0 0 0 6.33-6.34l-.01-8.83a8.17 8.17 0 0 0 4.78 1.52V4.56a4.85 4.85 0 0 1-1-.13z"/></svg>
+            </a>
+            <a href="#" class="si-link" title="YouTube">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M22.54 6.42a2.78 2.78 0 0 0-1.95-1.96C18.88 4 12 4 12 4s-6.88 0-8.59.46a2.78 2.78 0 0 0-1.95 1.96A29 29 0 0 0 1 12a29 29 0 0 0 .46 5.58A2.78 2.78 0 0 0 3.41 19.6C5.12 20 12 20 12 20s6.88 0 8.59-.46a2.78 2.78 0 0 0 1.95-1.95A29 29 0 0 0 23 12a29 29 0 0 0-.46-5.58zM9.75 15.02V8.98L15.5 12l-5.75 3.02z"/></svg>
+            </a>
+            <a href="#" class="si-link" title="Facebook">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
+            </a>
+            <a href="#" class="si-link" title="Instagram">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg>
+            </a>
+          </div>
+        </div>
+        <!-- Image: exactly half the layout -->
+        <div class="about-img-side">
+          <div class="about-img-box">
+            <div class="img-ph beauty-1" style="font-size:11px;flex-direction:column;gap:12px;">
+              <div style="font-size:48px;opacity:0.6;">🌸</div>
+              <span>FOTO QUIÉNES SOMOS<br><small style="font-size:9px;letter-spacing:2px;opacity:0.6;">Reemplaza con tu imagen</small></span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- LO QUE HACEMOS -->
+  <section class="what-section">
+    <div class="container">
+      <h2>Lo que hacemos</h2>
+      <p class="section-sub">Formación y servicios de belleza de alto nivel</p>
+      <div class="what-grid">
+        <div class="what-card" onclick="goPage('academia')">
+          <div class="what-card-img">
+            <div class="img-ph beauty-1" style="flex-direction:column;gap:10px;">
+              <div style="font-size:44px;">✂</div>
+              <span style="font-size:10px;opacity:0.7;">imagen maquillaje artístico</span>
+            </div>
+          </div>
+          <div class="what-card-body">
+            <h3>Maquillaje Artístico</h3>
+            <p>Técnicas avanzadas de maquillaje profesional para teatro, cine, editorial y eventos de alto nivel.</p>
+            <button class="btn-gold" onclick="event.stopPropagation();goPage('academia')">Ver más</button>
+          </div>
+        </div>
+        <div class="what-card" onclick="goPage('academia')">
+          <div class="what-card-img">
+            <div class="img-ph beauty-2" style="flex-direction:column;gap:10px;">
+              <div style="font-size:44px;">💅</div>
+              <span style="font-size:10px;opacity:0.7;">imagen estilismo capilar</span>
+            </div>
+          </div>
+          <div class="what-card-body">
+            <h3>Estilismo Capilar</h3>
+            <p>Domina las últimas tendencias en corte, colorimetría y tratamientos capilares de vanguardia.</p>
+            <button class="btn-gold" onclick="event.stopPropagation();goPage('academia')">Ver más</button>
+          </div>
+        </div>
+        <div class="what-card" onclick="goPage('academia')">
+          <div class="what-card-img">
+            <div class="img-ph beauty-3" style="flex-direction:column;gap:10px;">
+              <div style="font-size:44px;">🌸</div>
+              <span style="font-size:10px;opacity:0.7;">imagen estética integral</span>
+            </div>
+          </div>
+          <div class="what-card-body">
+            <h3>Estética Integral</h3>
+            <p>Cuidado de la piel, tratamientos faciales y corporales con las mejores técnicas estéticas.</p>
+            <button class="btn-gold" onclick="event.stopPropagation();goPage('academia')">Ver más</button>
+          </div>
+        </div>
+        <div class="what-card" onclick="goPage('academia')">
+          <div class="what-card-img">
+            <div class="img-ph beauty-4" style="flex-direction:column;gap:10px;">
+              <div style="font-size:44px;">👑</div>
+              <span style="font-size:10px;opacity:0.7;">imagen imagen personal</span>
+            </div>
+          </div>
+          <div class="what-card-body">
+            <h3>Imagen Personal</h3>
+            <p>Consultoría de imagen, asesoría de color y estilo personal para destacar en cualquier escenario.</p>
+            <button class="btn-gold" onclick="event.stopPropagation();goPage('academia')">Ver más</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ARELI RAYA -->
+  <section class="areli-section">
+    <div class="container">
+      <div class="areli-grid">
+        <!-- Image: exactly half the layout -->
+        <div>
+          <div class="areli-img-box">
+            <div class="img-ph beauty-1" style="flex-direction:column;gap:12px;">
+              <div style="font-size:52px;opacity:0.6;">👤</div>
+              <span style="font-size:11px;letter-spacing:3px;">FOTO ARELI RAYA<br><small style="font-size:9px;letter-spacing:2px;opacity:0.6;">Reemplaza con tu imagen</small></span>
+            </div>
+          </div>
+        </div>
+        <div class="areli-text">
+          <span class="about-tag">Fundadora & Directora</span>
+          <h2>Areli Raya</h2>
+          <div class="gold-line"></div>
+          <h4>Master Artist · Educator · Entrepreneur</h4>
+          <p>Con más de 15 años de trayectoria en la industria de la belleza, Areli Raya es una de las artistas y educadoras más reconocidas de México. Su pasión por el arte y la enseñanza la llevó a fundar Metabeauty como un espacio donde la creatividad no tiene límites.</p>
+          <p>Ha trabajado con marcas internacionales, artistas de renombre y ha formado a más de 500 profesionales que hoy brillan en la industria. Su filosofía es simple: la belleza es un lenguaje universal.</p>
+          <div class="social-icons-row">
+            <a href="#" class="si-link" title="TikTok">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-2.88 2.5 2.89 2.89 0 0 1-2.89-2.89 2.89 2.89 0 0 1 2.89-2.89c.28 0 .54.04.79.1V9.01a6.33 6.33 0 0 0-.79-.05 6.34 6.34 0 0 0-6.34 6.34 6.34 6.34 0 0 0 6.34 6.34 6.34 6.34 0 0 0 6.33-6.34l-.01-8.83a8.17 8.17 0 0 0 4.78 1.52V4.56a4.85 4.85 0 0 1-1-.13z"/></svg>
+            </a>
+            <a href="#" class="si-link" title="YouTube">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M22.54 6.42a2.78 2.78 0 0 0-1.95-1.96C18.88 4 12 4 12 4s-6.88 0-8.59.46a2.78 2.78 0 0 0-1.95 1.96A29 29 0 0 0 1 12a29 29 0 0 0 .46 5.58A2.78 2.78 0 0 0 3.41 19.6C5.12 20 12 20 12 20s6.88 0 8.59-.46a2.78 2.78 0 0 0 1.95-1.95A29 29 0 0 0 23 12a29 29 0 0 0-.46-5.58zM9.75 15.02V8.98L15.5 12l-5.75 3.02z"/></svg>
+            </a>
+            <a href="#" class="si-link" title="Facebook">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
+            </a>
+            <a href="#" class="si-link" title="Instagram">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- INFO CAROUSEL (1 at a time) -->
+  <section class="info-carousel-section">
+    <div class="info-carousel-wrap">
+      <div class="info-slides" id="infoSlides">
+        <div class="info-slide">
+          <div class="info-slide-text">
+            <span class="tag">Cursos Online</span>
+            <h3>Aprende desde donde estés, a tu propio ritmo</h3>
+            <p>Accede a más de 50 cursos grabados por nuestra experta Areli Raya. Aprende técnicas profesionales sin salir de casa con acceso de por vida.</p>
+            <button class="btn-gold" onclick="goPage('academia')">Ver cursos online</button>
+          </div>
+          <div class="info-slide-img">
+            <div class="img-ph beauty-2" style="flex-direction:column;gap:12px;">
+              <div style="font-size:52px;opacity:0.7;">💻</div>
+              <span style="font-size:10px;opacity:0.6;">imagen cursos online</span>
+            </div>
+          </div>
+        </div>
+        <div class="info-slide">
+          <div class="info-slide-text">
+            <span class="tag">Presencial CDMX</span>
+            <h3>Experiencia práctica con instructoras certificadas</h3>
+            <p>Talleres intensivos en nuestro estudio en CDMX. Práctica real, material incluido y certificado al finalizar. Grupos pequeños para atención personalizada.</p>
+            <button class="btn-gold" onclick="goPage('academia')">Ver talleres presenciales</button>
+          </div>
+          <div class="info-slide-img">
+            <div class="img-ph beauty-3" style="flex-direction:column;gap:12px;">
+              <div style="font-size:52px;opacity:0.7;">🏫</div>
+              <span style="font-size:10px;opacity:0.6;">imagen taller presencial</span>
+            </div>
+          </div>
+        </div>
+        <div class="info-slide">
+          <div class="info-slide-text">
+            <span class="tag">Asesorías 1:1</span>
+            <h3>Mentoría personalizada para llevar tu carrera al siguiente nivel</h3>
+            <p>Sesiones personalizadas donde analizamos tu trabajo, tus metas y creamos un plan de acción específico para tu crecimiento profesional.</p>
+            <button class="btn-gold" onclick="goPage('academia')">Agendar asesoría</button>
+          </div>
+          <div class="info-slide-img">
+            <div class="img-ph beauty-4" style="flex-direction:column;gap:12px;">
+              <div style="font-size:52px;opacity:0.7;">🎯</div>
+              <span style="font-size:10px;opacity:0.6;">imagen asesoría personalizada</span>
+            </div>
+          </div>
+        </div>
+        <div class="info-slide">
+          <div class="info-slide-text">
+            <span class="tag">Certificación</span>
+            <h3>Obtén un certificado avalado con validez nacional</h3>
+            <p>Todos nuestros cursos incluyen certificado digital y físico, reconocido por las principales marcas e institutos del país. Tu credencial de excelencia.</p>
+            <button class="btn-gold" onclick="goPage('academia')">Ver programas</button>
+          </div>
+          <div class="info-slide-img">
+            <div class="img-ph gold-grad" style="flex-direction:column;gap:12px;">
+              <div style="font-size:52px;opacity:0.7;">🏆</div>
+              <span style="font-size:10px;opacity:0.6;">imagen certificación</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="info-carousel-controls">
+      <button class="info-arrow" onclick="infoMove(-1)">&#8592;</button>
+      <div class="info-dots" id="infoDots">
+        <div class="info-dot active" onclick="infoGo(0)"></div>
+        <div class="info-dot" onclick="infoGo(1)"></div>
+        <div class="info-dot" onclick="infoGo(2)"></div>
+        <div class="info-dot" onclick="infoGo(3)"></div>
+      </div>
+      <button class="info-arrow" onclick="infoMove(1)">&#8594;</button>
+    </div>
+  </section>
+
+  <!-- ÚNETE -->
+  <section class="join-section">
+    <div class="container">
+      <h2>¿Quieres unirte al equipo <em>Metabeauty?</em></h2>
+      <p>Buscamos personas apasionadas, creativas y con ganas de crecer</p>
+      <a href="https://wa.me/521234567890" target="_blank" class="btn-gold-filled">Contáctanos por WhatsApp</a>
+    </div>
+  </section>
+
+  <!-- TESTIMONIOS -->
+  <section class="testimonios-section">
+    <div class="container">
+      <span class="about-tag" style="text-align:center;display:block;">Experiencias reales</span>
+      <h2>Lo que dicen<br>nuestras alumnas</h2>
+      <div class="gold-line center"></div>
+      <div class="test-carousel-wrap">
+        <div class="test-slides" id="testSlides">
+          <div class="test-slide"><div class="test-card"><span class="test-quote">"</span><p class="test-text">Metabeauty cambió mi vida. Pasé de ser aficionada a tener mi propio estudio en menos de un año gracias a la formación que recibí.</p><div class="test-author"><div class="test-avatar">V</div><div><div class="test-name">VALERIA MENDOZA</div><div class="test-role">Estilista · CDMX</div></div></div></div></div>
+          <div class="test-slide"><div class="test-card"><span class="test-quote">"</span><p class="test-text">El curso online fue perfectamente estructurado. Areli explica de forma clara y el material es de primera calidad. Totalmente recomendado.</p><div class="test-author"><div class="test-avatar">S</div><div><div class="test-name">SOFÍA RAMÍREZ</div><div class="test-role">Maquillista · Guadalajara</div></div></div></div></div>
+          <div class="test-slide"><div class="test-card"><span class="test-quote">"</span><p class="test-text">La asesoría personalizada fue clave para mi crecimiento. Ahora tengo agenda llena todos los meses gracias a Metabeauty.</p><div class="test-author"><div class="test-avatar">M</div><div><div class="test-name">MARIANA CRUZ</div><div class="test-role">Beauty Coach · Monterrey</div></div></div></div></div>
+          <div class="test-slide"><div class="test-card"><span class="test-quote">"</span><p class="test-text">El acceso de por vida a los materiales es increíble. El certificado me abrió muchas puertas en la industria.</p><div class="test-author"><div class="test-avatar">L</div><div><div class="test-name">LUCÍA HERNÁNDEZ</div><div class="test-role">Esteticista · Puebla</div></div></div></div></div>
+          <div class="test-slide"><div class="test-card"><span class="test-quote">"</span><p class="test-text">El taller presencial fue una experiencia transformadora. El ambiente, las compañeras y la enseñanza de Areli hacen de Metabeauty algo único.</p><div class="test-author"><div class="test-avatar">A</div><div><div class="test-name">ANDREA TORRES</div><div class="test-role">Nail Artist · CDMX</div></div></div></div></div>
+          <div class="test-slide"><div class="test-card"><span class="test-quote">"</span><p class="test-text">Inversión que vale cada peso. La calidad del contenido, el soporte y la comunidad que se forma es invaluable.</p><div class="test-author"><div class="test-avatar">P</div><div><div class="test-name">PAOLA JIMÉNEZ</div><div class="test-role">Colorista · Querétaro</div></div></div></div></div>
+        </div>
+      </div>
+      <div class="test-controls" id="testDots">
+        <div class="test-dot active" onclick="testGo(0)"></div>
+        <div class="test-dot" onclick="testGo(1)"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- NEWSLETTER -->
+  <section class="newsletter-section">
+    <div class="container">
+      <span class="about-tag" style="color:var(--gold);text-align:center;display:block;margin-bottom:12px;">Mantente al día</span>
+      <h2>Únete a nuestra<br>comunidad</h2>
+      <p>Recibe consejos, novedades y ofertas exclusivas directamente en tu correo</p>
+      <div class="newsletter-form">
+        <input type="email" placeholder="tu@email.com">
+        <button>Suscribirse</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- BRAND LOGO -->
+  <section class="brand-logo-section">
+    <div class="brand-logo-big">META<span>beauty</span></div>
+    <div class="brand-logo-tagline">Arte · Pasión · Excelencia</div>
+  </section>
+
+</div>
+</div>
+
+<!-- ======== PÁGINA: ACADEMIA ======== -->
+<div class="page" id="page-academia">
+<div class="page-content with-search">
+
+  <section class="academia-hero">
+    <div class="container">
+      <div class="academia-hero-grid">
+        <div class="academia-hero-img">
+          <div class="img-ph beauty-2" style="flex-direction:column;gap:12px;">
+            <div style="font-size:56px;opacity:0.7;">🎓</div>
+            <span style="font-size:10px;opacity:0.6;">imagen academia</span>
+          </div>
+        </div>
+        <div class="academia-hero-text">
+          <span class="about-tag">Formación Profesional</span>
+          <h2>La Academia<br><em style="color:var(--gold)">Metabeauty</em></h2>
+          <div class="gold-line"></div>
+          <p>Somos un centro de formación especializado en belleza y estética profesional. Nuestros programas están diseñados para transformar tu pasión en una carrera exitosa, con métodos modernos y una visión integral del arte de la belleza.</p>
+          <p>Desde cursos online hasta talleres presenciales intensivos, tenemos el formato perfecto para cada estilo de aprendizaje.</p>
+          <button class="btn-gold" onclick="document.getElementById('modalidades').scrollIntoView({behavior:'smooth'})">Ver cursos ↓</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="modalidades-section" id="modalidades">
+    <div class="container">
+      <h2>Modalidades</h2>
+      <div class="gold-line center"></div>
+      <p class="sub">Selecciona la modalidad que más se adecue a tus necesidades</p>
+      <div class="modalidades-grid">
+        <div class="modalidad-card" onclick="goPage('academia')">
+          <span class="modalidad-icon">💻</span>
+          <h3>Academia Online</h3>
+          <p>Aprende desde casa a tu propio ritmo con acceso de por vida a todos los materiales, clases grabadas y comunidad privada.</p>
+          <button class="btn-gold" onclick="event.stopPropagation();goPage('academia')">Ver cursos online</button>
+        </div>
+        <div class="modalidad-card" onclick="goPage('academia')">
+          <span class="modalidad-icon">🏫</span>
+          <h3>Academia Presencial</h3>
+          <p>Talleres intensivos en nuestro estudio en CDMX. Práctica real, material incluido y certificado al finalizar.</p>
+          <button class="btn-gold" onclick="event.stopPropagation();goPage('academia')">Ver presenciales</button>
+        </div>
+        <div class="modalidad-card" onclick="goPage('contacto')">
+          <span class="modalidad-icon">🎯</span>
+          <h3>Asesorías</h3>
+          <p>Sesiones 1:1 con Areli Raya o nuestras instructoras certificadas. Mentoría personalizada para tu crecimiento profesional.</p>
+          <button class="btn-gold" onclick="event.stopPropagation();goPage('contacto')">Agendar asesoría</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="metodo-section">
+    <div class="container">
+      <h2>Nuestro Método de Enseñanza</h2>
+      <div class="metodo-steps">
+        <div class="metodo-step"><div class="step-num">01</div><h4>Elige tu curso</h4><p>Explora nuestro catálogo y encuentra el programa que se adapta a tus objetivos.</p></div>
+        <div class="metodo-step"><div class="step-num">02</div><h4>Inscríbete</h4><p>Proceso simple y rápido. Elige tu modalidad de pago y asegura tu lugar.</p></div>
+        <div class="metodo-step"><div class="step-num">03</div><h4>Aprende</h4><p>Accede al contenido y recibe retroalimentación de tu instructora en cada paso.</p></div>
+        <div class="metodo-step"><div class="step-num">04</div><h4>Practica</h4><p>Aplica lo aprendido con modelos reales bajo supervisión de expertas.</p></div>
+        <div class="metodo-step"><div class="step-num">05</div><h4>Certifícate</h4><p>Obtén tu certificado y únete a nuestra red de alumni con acceso exclusivo.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="cursos-pop-section">
+    <div class="container">
+      <span class="about-tag">Más buscados</span>
+      <h2>Cursos más populares</h2>
+      <div class="gold-line"></div>
+      <div class="cursos-grid">
+        <div class="curso-card" onclick="goPage('contacto')">
+          <div class="curso-card-img"><div class="img-ph beauty-1" style="flex-direction:column;gap:8px;"><div style="font-size:36px;">✨</div><span style="font-size:9px;opacity:0.6;">imagen curso</span></div></div>
+          <div class="curso-card-body">
+            <span class="curso-tag">Online · Maquillaje</span>
+            <h3>Maquillaje Profesional desde Cero</h3>
+            <p>Aprende las bases del maquillaje profesional: preparación de piel, técnicas de aplicación y looks para toda ocasión.</p>
+            <div class="curso-price">$1,499 MXN</div>
+          </div>
+        </div>
+        <div class="curso-card" onclick="goPage('contacto')">
+          <div class="curso-card-img"><div class="img-ph beauty-2" style="flex-direction:column;gap:8px;"><div style="font-size:36px;">💇</div><span style="font-size:9px;opacity:0.6;">imagen curso</span></div></div>
+          <div class="curso-card-body">
+            <span class="curso-tag">Presencial · Cabello</span>
+            <h3>Colorimetría Avanzada</h3>
+            <p>Técnicas modernas: balayage, mechas, iluminación y corrección de color con materiales de primera.</p>
+            <div class="curso-price">$4,800 MXN</div>
+          </div>
+        </div>
+        <div class="curso-card" onclick="goPage('contacto')">
+          <div class="curso-card-img"><div class="img-ph beauty-3" style="flex-direction:column;gap:8px;"><div style="font-size:36px;">🌟</div><span style="font-size:9px;opacity:0.6;">imagen curso</span></div></div>
+          <div class="curso-card-body">
+            <span class="curso-tag">Online · Imagen</span>
+            <h3>Consultoría de Imagen Personal</h3>
+            <p>Construye una identidad visual poderosa. Aprende colorimetría personal y cómo asesorar a tus clientes.</p>
+            <div class="curso-price">$2,200 MXN</div>
+          </div>
+        </div>
+        <div class="curso-card" onclick="goPage('contacto')">
+          <div class="curso-card-img"><div class="img-ph beauty-4" style="flex-direction:column;gap:8px;"><div style="font-size:36px;">👰</div><span style="font-size:9px;opacity:0.6;">imagen curso</span></div></div>
+          <div class="curso-card-body">
+            <span class="curso-tag">Presencial · Maquillaje</span>
+            <h3>Maquillaje Nupcial Profesional</h3>
+            <p>Especialízate en el maquillaje para novias: skin prep, airbrush, looks duraderos y manejo emocional.</p>
+            <div class="curso-price">$5,500 MXN</div>
+          </div>
+        </div>
+        <div class="curso-card" onclick="goPage('contacto')">
+          <div class="curso-card-img"><div class="img-ph beauty-1" style="flex-direction:column;gap:8px;"><div style="font-size:36px;">💆</div><span style="font-size:9px;opacity:0.6;">imagen curso</span></div></div>
+          <div class="curso-card-body">
+            <span class="curso-tag">Online · Estética</span>
+            <h3>Cuidado de la Piel Avanzado</h3>
+            <p>Rutinas skincare, tipos de piel, tratamientos hidratantes y antienvejecimiento. Con y sin aparatología.</p>
+            <div class="curso-price">$1,899 MXN</div>
+          </div>
+        </div>
+        <div class="curso-card" onclick="goPage('contacto')">
+          <div class="curso-card-img"><div class="img-ph beauty-2" style="flex-direction:column;gap:8px;"><div style="font-size:36px;">💼</div><span style="font-size:9px;opacity:0.6;">imagen curso</span></div></div>
+          <div class="curso-card-body">
+            <span class="curso-tag">Asesoría · Negocio</span>
+            <h3>Emprende tu Negocio Beauty</h3>
+            <p>De artista a empresaria: estructura tu negocio, fija precios, atrae clientes y crece en redes sociales.</p>
+            <div class="curso-price">$3,000 MXN</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</div>
+</div>
+
+<!-- ======== PÁGINA: SERVICIOS ======== -->
+<div class="page" id="page-servicios">
+<div class="page-content with-search">
+
+  <div class="servicios-hero">
+    <div class="servicios-hero-bg"></div>
+    <div class="servicios-hero-content">
+      <span class="about-tag" style="display:block;margin-bottom:16px;">Estudio Profesional</span>
+      <h1>Nuestros<br><em>Servicios</em></h1>
+      <div class="gold-line center" style="margin:20px auto 32px;"></div>
+      <a href="https://wa.me/521234567890" target="_blank" class="btn-gold-filled">Contáctanos por WhatsApp</a>
+    </div>
+  </div>
+
+  <section class="servicios-about">
+    <div class="container">
+      <div class="servicios-about-inner">
+        <span class="about-tag" style="display:block;margin-bottom:12px;">Quiénes somos</span>
+        <h2>Belleza de alto nivel<br>para cada ocasión</h2>
+        <div class="gold-line center"></div>
+        <p>En Metabeauty no solo enseñamos belleza, también la creamos. Nuestro estudio profesional ofrece servicios exclusivos de maquillaje, peinado y asesoría de imagen para mujeres que quieren verse y sentirse extraordinarias.</p>
+        <p>Cada servicio es personalizado, con productos de alta gama y técnicas que garantizan resultados impecables y duraderos.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="servicios-list">
+    <div class="container">
+      <h2>Nuestros servicios</h2>
+      <div class="servicios-grid">
+        <div class="servicio-card" onclick="goPage('contacto')">
+          <div class="servicio-card-img"><div class="img-ph beauty-1" style="flex-direction:column;gap:10px;"><div style="font-size:40px;">💄</div><span style="font-size:9px;opacity:0.6;">imagen servicio</span></div></div>
+          <div class="servicio-card-body">
+            <h3>Maquillaje de Evento</h3>
+            <p>Look impecable para bodas, XV años, graduaciones y galas. Incluye prueba previa.</p>
+            <button class="btn-gold" onclick="event.stopPropagation();goPage('contacto')">Ver más</button>
+          </div>
+        </div>
+        <div class="servicio-card" onclick="goPage('contacto')">
+          <div class="servicio-card-img"><div class="img-ph beauty-2" style="flex-direction:column;gap:10px;"><div style="font-size:40px;">👰</div><span style="font-size:9px;opacity:0.6;">imagen servicio</span></div></div>
+          <div class="servicio-card-body">
+            <h3>Maquillaje Nupcial</h3>
+            <p>Servicio completo para novias: prueba, día del evento y acompañamiento personalizado.</p>
+            <button class="btn-gold" onclick="event.stopPropagation();goPage('contacto')">Ver más</button>
+          </div>
+        </div>
+        <div class="servicio-card" onclick="goPage('contacto')">
+          <div class="servicio-card-img"><div class="img-ph beauty-3" style="flex-direction:column;gap:10px;"><div style="font-size:40px;">📸</div><span style="font-size:9px;opacity:0.6;">imagen servicio</span></div></div>
+          <div class="servicio-card-body">
+            <h3>Maquillaje Editorial</h3>
+            <p>Para sesiones fotográficas, lookbooks y proyectos creativos. Técnica precisa para cámara.</p>
+            <button class="btn-gold" onclick="event.stopPropagation();goPage('contacto')">Ver más</button>
+          </div>
+        </div>
+        <div class="servicio-card" onclick="goPage('contacto')">
+          <div class="servicio-card-img"><div class="img-ph beauty-4" style="flex-direction:column;gap:10px;"><div style="font-size:40px;">🌸</div><span style="font-size:9px;opacity:0.6;">imagen servicio</span></div></div>
+          <div class="servicio-card-body">
+            <h3>Tratamientos Faciales</h3>
+            <p>Limpieza profunda, hidratación y tratamientos antiedad con productos premium.</p>
+            <button class="btn-gold" onclick="event.stopPropagation();goPage('contacto')">Ver más</button>
+          </div>
+        </div>
+        <div class="servicio-card" onclick="goPage('contacto')">
+          <div class="servicio-card-img"><div class="img-ph beauty-1" style="flex-direction:column;gap:10px;"><div style="font-size:40px;">✨</div><span style="font-size:9px;opacity:0.6;">imagen servicio</span></div></div>
+          <div class="servicio-card-body">
+            <h3>Asesoría de Imagen</h3>
+            <p>Análisis de colorimetría personal, diagnóstico de estilo y guardarropa cápsula.</p>
+            <button class="btn-gold" onclick="event.stopPropagation();goPage('contacto')">Ver más</button>
+          </div>
+        </div>
+        <div class="servicio-card" onclick="goPage('contacto')">
+          <div class="servicio-card-img"><div class="img-ph beauty-2" style="flex-direction:column;gap:10px;"><div style="font-size:40px;">💇</div><span style="font-size:9px;opacity:0.6;">imagen servicio</span></div></div>
+          <div class="servicio-card-body">
+            <h3>Estilismo Capilar</h3>
+            <p>Peinados para eventos y sesiones. Ondas, recogidos, planchado y tratamientos.</p>
+            <button class="btn-gold" onclick="event.stopPropagation();goPage('contacto')">Ver más</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</div>
+</div>
+
+<!-- ======== PÁGINA: BLOG ======== -->
+<div class="page" id="page-blog">
+<div class="page-content with-search">
+
+  <div class="blog-hero">
+    <div class="container">
+      <h1>Bienvenido a<br><em>Metabeauty</em> Blogs</h1>
+      <div class="gold-line center"></div>
+      <p>Tendencias, técnicas y consejos del mundo de la belleza</p>
+    </div>
+  </div>
+
+  <section class="blog-section">
+    <div class="container">
+      <h2>Blogs recientes</h2>
+      <div class="blog-filters">
+        <button class="blog-filter active" onclick="filterBlog('todos',this)">Todos</button>
+        <button class="blog-filter" onclick="filterBlog('negocio',this)">Negocio</button>
+        <button class="blog-filter" onclick="filterBlog('maquillaje',this)">Maquillaje</button>
+        <button class="blog-filter" onclick="filterBlog('peinado',this)">Peinado</button>
+        <button class="blog-filter" onclick="filterBlog('piel',this)">Cuidado de piel</button>
+        <button class="blog-filter" onclick="filterBlog('tendencias',this)">Tendencias</button>
+      </div>
+      <div class="blog-grid" id="blogGrid">
+        <div class="blog-card" data-cat="maquillaje" onclick="alert('Abriendo blog: 5 técnicas de contouring...')">
+          <div class="blog-card-img"><div class="img-ph beauty-1" style="flex-direction:column;gap:8px;"><div style="font-size:36px;">💄</div><span style="font-size:9px;opacity:0.6;">imagen blog</span></div></div>
+          <div class="blog-card-body">
+            <div class="blog-meta"><div class="blog-author-avatar">A</div><div class="blog-author-name">Areli Raya</div></div>
+            <div class="blog-date">12 de marzo, 2025</div>
+            <span class="blog-category">Maquillaje</span>
+            <h3>5 técnicas de contouring que debes dominar en 2025</h3>
+            <p>El contouring evolucionó. Descubre las técnicas más modernas que los maquillistas profesionales usan ahora.</p>
+            <button class="btn-gold" style="font-size:9px;padding:8px 20px;" onclick="event.stopPropagation();alert('Blog próximamente')">Leer más</button>
+          </div>
+        </div>
+        <div class="blog-card" data-cat="negocio" onclick="alert('Abriendo blog: Cómo fijar precios...')">
+          <div class="blog-card-img"><div class="img-ph beauty-2" style="flex-direction:column;gap:8px;"><div style="font-size:36px;">📊</div><span style="font-size:9px;opacity:0.6;">imagen blog</span></div></div>
+          <div class="blog-card-body">
+            <div class="blog-meta"><div class="blog-author-avatar">A</div><div class="blog-author-name">Areli Raya</div></div>
+            <div class="blog-date">5 de marzo, 2025</div>
+            <span class="blog-category">Negocio</span>
+            <h3>Cómo fijar precios justos para tus servicios de belleza</h3>
+            <p>Uno de los mayores retos para profesionales de la belleza es saber cuánto cobrar. Guía práctica.</p>
+            <button class="btn-gold" style="font-size:9px;padding:8px 20px;" onclick="event.stopPropagation();alert('Blog próximamente')">Leer más</button>
+          </div>
+        </div>
+        <div class="blog-card" data-cat="peinado" onclick="alert('Abriendo blog: Tendencias coloración...')">
+          <div class="blog-card-img"><div class="img-ph beauty-3" style="flex-direction:column;gap:8px;"><div style="font-size:36px;">💇</div><span style="font-size:9px;opacity:0.6;">imagen blog</span></div></div>
+          <div class="blog-card-body">
+            <div class="blog-meta"><div class="blog-author-avatar">A</div><div class="blog-author-name">Areli Raya</div></div>
+            <div class="blog-date">28 de febrero, 2025</div>
+            <span class="blog-category">Peinado</span>
+            <h3>Tendencias de coloración para primavera-verano 2025</h3>
+            <p>El balayage sigue siendo rey pero con nuevos giros. Descubre los colores que dominarán la temporada.</p>
+            <button class="btn-gold" style="font-size:9px;padding:8px 20px;" onclick="event.stopPropagation();alert('Blog próximamente')">Leer más</button>
+          </div>
+        </div>
+        <div class="blog-card" data-cat="piel" onclick="alert('Abriendo blog: Rutina skincare...')">
+          <div class="blog-card-img"><div class="img-ph beauty-4" style="flex-direction:column;gap:8px;"><div style="font-size:36px;">🌿</div><span style="font-size:9px;opacity:0.6;">imagen blog</span></div></div>
+          <div class="blog-card-body">
+            <div class="blog-meta"><div class="blog-author-avatar">A</div><div class="blog-author-name">Areli Raya</div></div>
+            <div class="blog-date">20 de febrero, 2025</div>
+            <span class="blog-category">Cuidado de piel</span>
+            <h3>Rutina skincare en 5 pasos para pieles mixtas</h3>
+            <p>Simplifica tu rutina sin sacrificar resultados. Estos 5 pasos transformarán tu piel en semanas.</p>
+            <button class="btn-gold" style="font-size:9px;padding:8px 20px;" onclick="event.stopPropagation();alert('Blog próximamente')">Leer más</button>
+          </div>
+        </div>
+        <div class="blog-card" data-cat="tendencias" onclick="alert('Abriendo blog: No makeup trend...')">
+          <div class="blog-card-img"><div class="img-ph beauty-1" style="flex-direction:column;gap:8px;"><div style="font-size:36px;">✨</div><span style="font-size:9px;opacity:0.6;">imagen blog</span></div></div>
+          <div class="blog-card-body">
+            <div class="blog-meta"><div class="blog-author-avatar">A</div><div class="blog-author-name">Areli Raya</div></div>
+            <div class="blog-date">14 de febrero, 2025</div>
+            <span class="blog-category">Tendencias</span>
+            <h3>El maquillaje "no makeup" que arrasa en redes en 2025</h3>
+            <p>La tendencia glass skin y el maquillaje natural crean el look más deseado del año.</p>
+            <button class="btn-gold" style="font-size:9px;padding:8px 20px;" onclick="event.stopPropagation();alert('Blog próximamente')">Leer más</button>
+          </div>
+        </div>
+        <div class="blog-card" data-cat="negocio" onclick="alert('Abriendo blog: Instagram 2025...')">
+          <div class="blog-card-img"><div class="img-ph beauty-2" style="flex-direction:column;gap:8px;"><div style="font-size:36px;">📱</div><span style="font-size:9px;opacity:0.6;">imagen blog</span></div></div>
+          <div class="blog-card-body">
+            <div class="blog-meta"><div class="blog-author-avatar">A</div><div class="blog-author-name">Areli Raya</div></div>
+            <div class="blog-date">7 de febrero, 2025</div>
+            <span class="blog-category">Negocio</span>
+            <h3>Instagram para profesionales de la belleza: guía 2025</h3>
+            <p>Esta es la estrategia actualizada para crecer tu cuenta y atraer clientes ideales en Instagram.</p>
+            <button class="btn-gold" style="font-size:9px;padding:8px 20px;" onclick="event.stopPropagation();alert('Blog próximamente')">Leer más</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</div>
+</div>
+
+<!-- ======== PÁGINA: CONTACTO ======== -->
+<div class="page" id="page-contacto">
+<div class="page-content">
+  <section class="contacto-section">
+    <div class="container">
+      <span class="about-tag" style="display:block;text-align:center;margin-bottom:12px;">Estamos aquí para ti</span>
+      <h1>Contáctanos</h1>
+      <div class="gold-line center"></div>
+      <div class="contacto-grid">
+        <div class="contacto-info-col">
+          <div class="contact-block">
+            <h4>Contacto Directo</h4>
+            <a class="contact-item" href="https://wa.me/521234567890" target="_blank"><div class="contact-item-icon">💬</div><div class="contact-item-text">+52 123 456 7890 (WhatsApp)</div></a>
+            <a class="contact-item" href="mailto:hola@metabeauty.mx"><div class="contact-item-icon">✉</div><div class="contact-item-text">hola@metabeauty.mx</div></a>
+            <div class="contact-item"><div class="contact-item-icon">📍</div><div class="contact-item-text">Col. Polanco, CDMX</div></div>
+          </div>
+          <div class="contact-block">
+            <h4>Ubicación</h4>
+            <div class="map-placeholder" style="font-size:12px;letter-spacing:2px;display:flex;flex-direction:column;gap:8px;">
+              <div style="font-size:32px;">📍</div>
+              <span>Col. Polanco, CDMX</span>
+              <span style="font-size:9px;opacity:0.5;">(Mapa integrado con Google Maps)</span>
+            </div>
+          </div>
+          <div class="contact-block">
+            <h4>Redes Sociales</h4>
+            <a class="contact-item" href="#" target="_blank"><div class="contact-item-icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><rect x="2" y="2" width="20" height="20" rx="5" fill="none" stroke="currentColor" stroke-width="1.5"/><circle cx="12" cy="12" r="4" fill="none" stroke="currentColor" stroke-width="1.5"/><circle cx="17.5" cy="6.5" r="1"/></svg></div><div class="contact-item-text">@metabeauty.mx — Instagram</div></a>
+            <a class="contact-item" href="#" target="_blank"><div class="contact-item-icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg></div><div class="contact-item-text">Metabeauty — Facebook</div></a>
+            <a class="contact-item" href="#" target="_blank"><div class="contact-item-icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-2.88 2.5 2.89 2.89 0 0 1-2.89-2.89 2.89 2.89 0 0 1 2.89-2.89c.28 0 .54.04.79.1V9.01a6.33 6.33 0 0 0-.79-.05 6.34 6.34 0 0 0-6.34 6.34 6.34 6.34 0 0 0 6.34 6.34 6.34 6.34 0 0 0 6.33-6.34l-.01-8.83a8.17 8.17 0 0 0 4.78 1.52V4.56a4.85 4.85 0 0 1-1-.13z"/></svg></div><div class="contact-item-text">@metabeauty — TikTok</div></a>
+            <a class="contact-item" href="#" target="_blank"><div class="contact-item-icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M22.54 6.42a2.78 2.78 0 0 0-1.95-1.96C18.88 4 12 4 12 4s-6.88 0-8.59.46a2.78 2.78 0 0 0-1.95 1.96A29 29 0 0 0 1 12a29 29 0 0 0 .46 5.58A2.78 2.78 0 0 0 3.41 19.6C5.12 20 12 20 12 20s6.88 0 8.59-.46a2.78 2.78 0 0 0 1.95-1.95A29 29 0 0 0 23 12a29 29 0 0 0-.46-5.58zM9.75 15.02V8.98L15.5 12l-5.75 3.02z"/></svg></div><div class="contact-item-text">Metabeauty — YouTube</div></a>
+          </div>
+        </div>
+        <div>
+          <h3 style="font-family:'Cormorant Garamond',serif;font-size:22px;color:var(--oxford-dark);font-weight:400;margin-bottom:28px;">Envíanos un mensaje</h3>
+          <div class="form-group"><label>Nombre completo</label><input type="text" placeholder="Tu nombre"></div>
+          <div class="form-group"><label>Correo electrónico</label><input type="email" placeholder="tu@email.com"></div>
+          <div class="form-group"><label>Asunto</label><input type="text" placeholder="¿En qué podemos ayudarte?"></div>
+          <div class="form-group"><label>Mensaje</label><textarea placeholder="Cuéntanos más..."></textarea></div>
+          <button class="btn-gold-filled" onclick="alert('¡Mensaje enviado! Te contactaremos pronto.')">Enviar mensaje</button>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+</div>
+
+<!-- ======== PÁGINA: PRIVACIDAD ======== -->
+<div class="page" id="page-privacidad">
+<div class="page-content">
+  <section class="legal-section">
+    <div class="container">
+      <div class="legal-content">
+        <h1>Aviso de Privacidad</h1>
+        <div class="gold-line"></div>
+        <p>En cumplimiento con la Ley Federal de Protección de Datos Personales en Posesión de los Particulares, Metabeauty pone a disposición el presente Aviso de Privacidad.</p>
+        <h3>Responsable del tratamiento</h3>
+        <p>Metabeauty, con domicilio en Col. Polanco, Ciudad de México, es responsable del uso y protección de sus datos personales.</p>
+        <h3>Datos que recabamos</h3>
+        <p>Nombre completo, correo electrónico, teléfono, datos de pago (procesados de forma segura) e información de uso de la plataforma.</p>
+        <h3>Finalidades del tratamiento</h3>
+        <p>Procesar inscripciones, enviar información (previo consentimiento), facturación y mejora de nuestra plataforma.</p>
+        <h3>Derechos ARCO</h3>
+        <p>Tiene derecho a Acceder, Rectificar, Cancelar u Oponerse al tratamiento enviando un correo a: privacidad@metabeauty.mx</p>
+        <p style="margin-top:32px;font-size:11px;color:var(--text-muted);">Última actualización: enero 2025</p>
+      </div>
+    </div>
+  </section>
+</div>
+</div>
+
+<!-- ======== PÁGINA: FAQ ======== -->
+<div class="page" id="page-faq">
+<div class="page-content">
+  <section class="faq-section">
+    <div class="container">
+      <div class="faq-content">
+        <h1>Preguntas Frecuentes</h1>
+        <div class="gold-line"></div>
+        <div class="faq-item" onclick="toggleFaq(this)"><div class="faq-q"><h4>¿Cuánto tiempo tengo acceso a los cursos online?</h4><div class="faq-icon">+</div></div><div class="faq-a">Todos nuestros cursos online tienen acceso de por vida. Una vez inscrita, puedes regresar al contenido cuantas veces quieras.</div></div>
+        <div class="faq-item" onclick="toggleFaq(this)"><div class="faq-q"><h4>¿Los certificados tienen validez oficial?</h4><div class="faq-icon">+</div></div><div class="faq-a">Nuestros certificados son emitidos por Metabeauty y reconocidos por marcas líderes de la industria con alta credibilidad en el sector.</div></div>
+        <div class="faq-item" onclick="toggleFaq(this)"><div class="faq-q"><h4>¿Qué nivel necesito para inscribirme?</h4><div class="faq-icon">+</div></div><div class="faq-a">Tenemos cursos para todos los niveles, desde principiantes hasta profesionales que quieren especializarse. Cada curso indica el nivel requerido.</div></div>
+        <div class="faq-item" onclick="toggleFaq(this)"><div class="faq-q"><h4>¿Ofrecen financiamiento o pagos a meses?</h4><div class="faq-icon">+</div></div><div class="faq-a">Sí, ofrecemos opciones de pago en mensualidades para la mayoría de nuestros cursos. Contáctanos por WhatsApp para conocer los planes.</div></div>
+        <div class="faq-item" onclick="toggleFaq(this)"><div class="faq-q"><h4>¿Los talleres presenciales incluyen materiales?</h4><div class="faq-icon">+</div></div><div class="faq-a">Sí, todos nuestros talleres presenciales incluyen el kit de materiales necesarios. No necesitas traer nada más que ganas de aprender.</div></div>
+        <div class="faq-item" onclick="toggleFaq(this)"><div class="faq-q"><h4>¿Tienen política de reembolso?</h4><div class="faq-icon">+</div></div><div class="faq-a">Para cursos online ofrecemos garantía de satisfacción de 7 días. Si no cumplió tus expectativas, realizamos el reembolso completo sin preguntas.</div></div>
+      </div>
+    </div>
+  </section>
+</div>
+</div>
+
+<!-- ======== FOOTER ======== -->
+<footer id="footer">
+  <div class="container">
+    <div class="footer-inner">
+      <div class="footer-brand">
+        <div class="nav-logo-text" style="font-size:24px;color:var(--white);">META<span style="color:var(--gold)">beauty</span></div>
+        <p>Academia y estudio profesional de belleza. Transformamos pasiones en carreras exitosas desde Ciudad de México.</p>
+        <div class="footer-social-row">
+          <a href="#" class="si-link" title="TikTok" style="color:rgba(255,255,255,0.4);"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-2.88 2.5 2.89 2.89 0 0 1-2.89-2.89 2.89 2.89 0 0 1 2.89-2.89c.28 0 .54.04.79.1V9.01a6.33 6.33 0 0 0-.79-.05 6.34 6.34 0 0 0-6.34 6.34 6.34 6.34 0 0 0 6.34 6.34 6.34 6.34 0 0 0 6.33-6.34l-.01-8.83a8.17 8.17 0 0 0 4.78 1.52V4.56a4.85 4.85 0 0 1-1-.13z"/></svg></a>
+          <a href="#" class="si-link" title="YouTube" style="color:rgba(255,255,255,0.4);"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M22.54 6.42a2.78 2.78 0 0 0-1.95-1.96C18.88 4 12 4 12 4s-6.88 0-8.59.46a2.78 2.78 0 0 0-1.95 1.96A29 29 0 0 0 1 12a29 29 0 0 0 .46 5.58A2.78 2.78 0 0 0 3.41 19.6C5.12 20 12 20 12 20s6.88 0 8.59-.46a2.78 2.78 0 0 0 1.95-1.95A29 29 0 0 0 23 12a29 29 0 0 0-.46-5.58zM9.75 15.02V8.98L15.5 12l-5.75 3.02z"/></svg></a>
+          <a href="#" class="si-link" title="Facebook" style="color:rgba(255,255,255,0.4);"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg></a>
+          <a href="#" class="si-link" title="Instagram" style="color:rgba(255,255,255,0.4);"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg></a>
+          <a href="#" class="si-link" title="X" style="color:rgba(255,255,255,0.4);"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg></a>
+        </div>
+      </div>
+      <div class="footer-col">
+        <h5>Menú principal</h5>
+        <ul>
+          <li><a onclick="goPage('inicio')">Inicio</a></li>
+          <li><a onclick="goPage('academia')">Academia</a></li>
+          <li><a onclick="goPage('servicios')">Servicios</a></li>
+          <li><a onclick="goPage('blog')">Blog</a></li>
+          <li><a onclick="goPage('contacto')">Contacto</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h5>Contáctanos</h5>
+        <ul>
+          <li><a href="tel:+521234567890">+52 123 456 7890</a></li>
+          <li><a href="mailto:hola@metabeauty.mx">hola@metabeauty.mx</a></li>
+          <li><a href="#">Col. Polanco, CDMX</a></li>
+          <li><a href="https://wa.me/521234567890" target="_blank">WhatsApp</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h5>Legal</h5>
+        <ul>
+          <li><a onclick="goPage('privacidad')">Aviso de privacidad</a></li>
+          <li><a onclick="goPage('faq')">Preguntas frecuentes</a></li>
+          <li><a href="#">Términos y condiciones</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2025 Metabeauty. Todos los derechos reservados.</p>
+      <div class="footer-bottom-links">
+        <a onclick="goPage('privacidad')">Aviso de privacidad</a>
+        <a onclick="goPage('faq')">FAQ</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script>
+// ======== NAVIGATION ========
+function goPage(name) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  var pg = document.getElementById('page-' + name);
+  if (pg) { pg.classList.add('active'); window.scrollTo(0,0); }
+
+  document.querySelectorAll('.nav-links a').forEach(function(a) {
+    a.classList.toggle('active', a.dataset.page === name);
+  });
+
+  var srchPages = ['academia','servicios','blog'];
+  var ns = document.getElementById('navSearch');
+  var sl = document.getElementById('searchLabel');
+  var labels = { academia:'Busca tu curso', servicios:'Busca tu servicio', blog:'Busca tu blog' };
+  if (srchPages.indexOf(name) > -1) {
+    ns.classList.add('visible');
+    sl.textContent = labels[name] || '';
+  } else {
+    ns.classList.remove('visible');
+  }
+  document.getElementById('navLinks').classList.remove('open');
+}
+
+function toggleMenu() {
+  document.getElementById('navLinks').classList.toggle('open');
+}
+
+// ======== HERO CAROUSEL ========
+var heroIdx = 0;
+var heroTotal = 4;
+function heroMove(dir) { heroIdx = (heroIdx + dir + heroTotal) % heroTotal; heroApply(); }
+function heroGo(i) { heroIdx = i; heroApply(); }
+function heroApply() {
+  document.getElementById('heroSlides').style.transform = 'translateX(-' + (heroIdx * 100) + '%)';
+  document.querySelectorAll('.hero-dot').forEach(function(d,i){ d.classList.toggle('active', i===heroIdx); });
+}
+setInterval(function(){ heroMove(1); }, 5500);
+
+// ======== INFO CAROUSEL (1 at a time) ========
+var infoIdx = 0;
+var infoTotal = 4;
+function infoMove(dir) { infoIdx = (infoIdx + dir + infoTotal) % infoTotal; infoApply(); }
+function infoGo(i) { infoIdx = i; infoApply(); }
+function infoApply() {
+  // Always 100% per slide = one at a time
+  document.getElementById('infoSlides').style.transform = 'translateX(-' + (infoIdx * 100) + '%)';
+  document.querySelectorAll('.info-dot').forEach(function(d,i){ d.classList.toggle('active', i===infoIdx); });
+}
+setInterval(function(){ infoMove(1); }, 6000);
+
+// ======== TESTIMONIOS ========
+var testIdx = 0;
+function testGo(i) {
+  testIdx = i;
+  var perSlide = window.innerWidth < 768 ? 100 : 100; // each 3 slides = 33.33% each, show 3 at once
+  // 6 slides, 2 pages of 3
+  document.getElementById('testSlides').style.transform = 'translateX(-' + (testIdx * 3 * 33.333) + '%)';
+  document.querySelectorAll('.test-dot').forEach(function(d,ii){ d.classList.toggle('active', ii===testIdx); });
+}
+setInterval(function(){ testGo((testIdx+1)%2); }, 7000);
+
+// ======== BLOG FILTER ========
+function filterBlog(cat, btn) {
+  document.querySelectorAll('.blog-filter').forEach(function(b){ b.classList.remove('active'); });
+  btn.classList.add('active');
+  document.querySelectorAll('.blog-card').forEach(function(c){
+    c.style.display = (cat === 'todos' || c.dataset.cat === cat) ? '' : 'none';
+  });
+}
+
+// ======== FAQ ========
+function toggleFaq(item) { item.classList.toggle('open'); }
+
+// ======== SEARCH ========
+function doSearch() {
+  var q = document.getElementById('searchInput').value.trim();
+  if (q) alert('Buscando: "' + q + '"');
+}
+document.getElementById('searchInput').addEventListener('keypress', function(e){
+  if (e.key === 'Enter') doSearch();
+});
+</script>
+</body>
+</html>
